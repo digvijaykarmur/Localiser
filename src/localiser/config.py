@@ -12,15 +12,15 @@ class Settings(BaseSettings):
 
     workspace: Path = Field(Path("./workspace"), validation_alias="LOCALISER_WORKSPACE")
     gcp_project: str | None = Field(None, validation_alias="GCP_PROJECT")
-    gcp_location: str = Field("asia-south1", validation_alias="GCP_LOCATION")
+    gcp_location: str = Field("global", validation_alias="GCP_LOCATION")
     credentials: Path | None = Field(
         None, validation_alias="GOOGLE_APPLICATION_CREDENTIALS"
     )
-    model_vision_bulk: str = "gemini-2.5-flash"
-    model_vision_deep: str = "gemini-2.5-pro"
-    model_story: str = "gemini-2.5-pro"
-    model_dialogue: str = "gemini-2.5-flash"
-    model_review: str = "gemini-2.5-pro"
+    model_vision_bulk: str = "gemini-3.7-flash"
+    model_vision_deep: str = "gemini-3.7-flash"
+    model_story: str = "gemini-3.7-flash"
+    model_dialogue: str = "gemini-3.7-flash"
+    model_review: str = "gemini-3.7-flash"
 
     @property
     def database_url(self) -> str:

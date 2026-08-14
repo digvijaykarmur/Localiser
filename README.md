@@ -34,12 +34,13 @@ workspace. Do not paste the JSON contents into chat and never commit `.env`.
 ```dotenv
 GOOGLE_APPLICATION_CREDENTIALS=/Users/you/keys/vertex-localiser.json
 GCP_PROJECT=your-project
-GCP_LOCATION=asia-south1
+GCP_LOCATION=global
 LOCALISER_WORKSPACE=/Users/you/LocaliserWorkspace
 ```
 
-Model IDs also live in `.env`. Use models actually available in the selected
-Vertex region; a “latest” alias is not guaranteed to exist in every region.
+Model IDs also live in `.env`. Defaults use the current stable
+`gemini-3.7-flash` through Vertex's global endpoint. Pinning the explicit model
+ID keeps runs auditable; verify availability before spending on a chapter.
 
 ```bash
 localiser doctor

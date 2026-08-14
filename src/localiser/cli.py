@@ -49,6 +49,20 @@ def doctor() -> int:
             settings.gcp_project or "GCP_PROJECT is not set",
         )
     )
+    configured_models = {
+        settings.model_vision_bulk,
+        settings.model_vision_deep,
+        settings.model_story,
+        settings.model_dialogue,
+        settings.model_review,
+    }
+    checks.append(
+        (
+            "Model policy",
+            all(model == "gemini-3.7-flash" for model in configured_models),
+            ", ".join(sorted(configured_models)),
+        )
+    )
 
     print("Localiser doctor")
     for name, passed, detail in checks:
@@ -56,7 +70,9 @@ def doctor() -> int:
     failed_required = [
         name
         for name, passed, _ in checks
-        if not passed and name not in {"Pillow libraqm", "Playwright", "Vertex credentials", "GCP project"}
+        if not passed
+        and name
+        not in {"Pillow libraqm", "Playwright", "Vertex credentials", "GCP project"}
     ]
     if not auth_ok:
         print("\nVertex is optional for ingest, but required for AI pipeline stages.")

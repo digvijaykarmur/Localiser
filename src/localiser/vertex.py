@@ -24,10 +24,19 @@ class VertexClient:
             raise VertexUnavailable(
                 "Vertex support is not installed. Run: pip install -e '.[vertex]'"
             ) from exc
+        credentials = None
+        if self.settings.credentials:
+            from google.oauth2 import service_account
+
+            credentials = service_account.Credentials.from_service_account_file(
+                self.settings.credentials,
+                scopes=["https://www.googleapis.com/auth/cloud-platform"],
+            )
         self._client = genai.Client(
             vertexai=True,
             project=self.settings.gcp_project,
             location=self.settings.gcp_location,
+            credentials=credentials,
         )
         self._semaphore = asyncio.Semaphore(concurrency)
 
