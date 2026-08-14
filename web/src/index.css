@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #141210;
+  --paper: #fbf8f1;
+  --vermilion: #c8372a;
+  --indigo: #2b3a5b;
+  --sage: #7c8b6f;
+  --halftone: #d8d2c6;
+}
+
+body {
+  @apply bg-paper text-ink font-body;
+}
+
+/* halftone dot texture for panel edges */
+.halftone-edge {
+  background-image: radial-gradient(var(--halftone) 1px, transparent 1px);
+  background-size: 6px 6px;
+}
+
+.btn {
+  @apply px-3 py-1.5 rounded border border-halftone bg-white text-sm font-medium
+    hover:border-indigo transition-colors disabled:opacity-40 disabled:cursor-not-allowed;
+}
+.btn-primary {
+  @apply bg-indigo text-white border-indigo hover:bg-indigo/90;
+}
+.btn-danger {
+  @apply bg-vermilion text-white border-vermilion;
+}
+
+.badge {
+  @apply inline-block text-[11px] px-1.5 py-0.5 rounded font-mono;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* registration slider crosshair handle */
+.reg-handle {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  position: relative;
+  cursor: ew-resize;
+}
+.reg-handle::before,
+.reg-handle::after {
+  content: "";
+  position: absolute;
+  background: var(--ink);
+}
+.reg-handle::before {
+  left: 50%;
+  top: 3px;
+  bottom: 3px;
+  width: 1.5px;
+  transform: translateX(-50%);
+}
+.reg-handle::after {
+  top: 50%;
+  left: 3px;
+  right: 3px;
+  height: 1.5px;
+  transform: translateY(-50%);
+}
+.reg-tick {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--ink);
+}
