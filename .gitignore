@@ -1,6 +1,7 @@
 node_modules/
 dist/
 *.log
+*.tsbuildinfo
 .DS_Store
 
 # Runtime data written by the API dev server
