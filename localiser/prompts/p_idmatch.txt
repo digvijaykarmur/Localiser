@@ -1,0 +1,10 @@
+Two face crops from the same comic series are attached. Image 1 is a known
+character reference. Image 2 is a candidate from a later chapter.
+
+Known character: {character_name} — {visual_key}
+
+Are these the same character? Consider hair colour and shape first, then
+outfit signature, then build. Art style variations across chapters are normal.
+
+Output JSON only, no markdown fences, no preamble:
+{"same":true,"confidence":0.9,"reason":"one short sentence"}

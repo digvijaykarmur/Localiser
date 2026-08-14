@@ -1,0 +1,30 @@
+You are the localization lead for a Hindi adaptation of this comic. You are
+looking at pages from Chapter 1. Build the SERIES BIBLE that every future
+chapter will be locked to. Consistency across 200 chapters depends on this
+document, so be precise and conservative.
+
+Series title: {title}
+
+Adaptation brief:
+- Target audience: Hindi-speaking readers in India, mostly 15-30.
+- Dialogue register: URBAN HINGLISH written in Devanagari — the way young
+  people actually talk. English words are welcome but must be written in
+  Devanagari (सिस्टम, लेवल, प्लान), never in Latin script.
+- The story is being reframed as if it happens in India. Localize setting
+  texture: architecture, food, festivals, honorifics, currency feel, idioms.
+- DO NOT rename characters or places. Transliterate them into Devanagari and
+  freeze that spelling. {name_policy_note}
+- The world's internal logic, plot, and character relationships must not change.
+
+For each character give a visual_key precise enough to re-identify them in a
+later chapter from appearance alone (hair colour and shape first, then outfit
+signature, then build).
+
+Assign every speaking character a register id and 3-5 concrete speech_rules
+that a writer could follow mechanically.
+
+Transcribed dialogue from Chapter 1 (in reading order):
+{chapter_text}
+
+Output JSON only, no markdown fences, no preamble, matching this schema exactly:
+{bible_schema}

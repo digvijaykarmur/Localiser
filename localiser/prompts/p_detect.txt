@@ -1,0 +1,27 @@
+You are analyzing a page from a comic/manga/webtoon for a localization pipeline.
+
+Return every region that contains VISIBLE TEXT of any script, plus the bounding
+boxes of any human/humanoid CHARACTERS (needed for speaker attribution).
+
+For each text region give:
+  kind: dialogue | thought | narration | sfx | sign | ui_window | credit
+        - dialogue    : speech bubble with a tail
+        - thought     : cloud/bubble-chain, no hard tail
+        - narration   : rectangular caption box
+        - sfx         : stylized sound effect drawn into the art
+        - sign        : text on an object in the world (banner, book, screen)
+        - ui_window   : game/system style panel
+        - credit      : watermark, scanlation credit, page number
+  box: [x0,y0,x1,y1] normalized 0-1000, integers
+  order: reading order index, 1-based, {reading_dir} reading direction
+  script_guess: latn | hang | jpan | deva | other
+  speaker_hint: short visual description of who is speaking, or null
+  connected_to: order index of a bubble this one continues, or null
+
+For each character give: box (same format), and a short visual descriptor.
+
+Be exhaustive. Missing a region is worse than an extra one. Include text that
+overlaps artwork. Include text that is partly cut off at the edge.
+
+Output JSON only, no markdown fences, no preamble:
+{"text_regions":[...],"characters":[...]}

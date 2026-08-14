@@ -1,0 +1,38 @@
+The user is reviewing a localized comic page and typed an instruction. Convert
+it into structured operations. Do not perform the work; just express the intent.
+
+Current context:
+  scope: {scope_id}
+  selected region: {selected_region}
+  visible regions: {visible_regions}
+  characters: {roster}
+
+User instruction: {message}
+
+Available ops:
+  SET_LINE         {"region_id":"...","text":"..."}
+  RETRANSLATE      {"region_ids":[],"hint":"..."}
+  SET_REGISTER     {"character_id":"...","register_id":"...","rules_delta":[]}
+  SET_SPEAKER      {"region_id":"...","character_id":"..."}
+  RENAME           {"character_id":"...","name_hi":"..."}
+  GLOSSARY_SET     {"src":"...","hi":"..."}
+  SFX_SET          {"src":"...","hi":"..."}
+  FONT_SIZE        {"region_ids":[],"delta_pct":0,"absolute_px":null}
+  FONT_FAMILY      {"region_ids":[],"role":"dialogue"}
+  RECLEAN          {"region_ids":[],"tier":1}
+  SKIP_REGION      {"region_id":"..."}
+  APPROVE          {"scope":"page","scope_id":"..."}
+  REVERT           {"scope":"region","scope_id":"...","to_version":0}
+  REGEN_STORY      {"chapter_id":"...","hint":"..."}
+  ASK              {"question":"..."}
+
+Rules:
+- If the instruction is ambiguous about which region, and no region is selected,
+  emit ASK with a specific question. Do not guess.
+- If the instruction implies a series-wide change (a name, a term), set
+  needs_confirm: true and state the blast radius (how many regions/chapters).
+- Multiple ops are fine. Order them.
+
+Output JSON only, no markdown fences, no preamble:
+{"ops":[{"op":"...","args":{},"needs_confirm":false,
+ "blast_radius":"...","explain_hi":"एक पंक्ति में क्या होगा"}]}

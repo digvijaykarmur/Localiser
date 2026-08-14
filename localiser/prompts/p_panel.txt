@@ -1,0 +1,17 @@
+Describe each panel on this page for a writer who cannot see the image and must
+write vivid Hindi prose from your description.
+
+Per panel, in reading order:
+  shot: extreme_wide | wide | medium | close | extreme_close | insert
+  setting: where we are, time of day, weather, notable environment detail
+  characters: [{who (use the roster), expression, pose, what they are doing}]
+  action: the single most important thing happening
+  mood: one or two words
+  props: objects that matter
+  camera_note: angle or movement implied (low angle, over-shoulder, etc.)
+
+Roster: {character_roster}
+
+Be concrete and visual. No interpretation, no plot speculation.
+
+Output JSON only, no markdown fences, no preamble: {"panels":[...]}
