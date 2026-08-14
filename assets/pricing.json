@@ -1,0 +1,8 @@
+{
+  "_comment": "USD per 1M tokens — update freely, the cost dashboard reads this live",
+  "gemini-3.7-flash": {"in_per_mtok": 0.50, "out_per_mtok": 3.00},
+  "gemini-3.6-flash": {"in_per_mtok": 0.45, "out_per_mtok": 2.70},
+  "gemini-3.5-flash": {"in_per_mtok": 0.40, "out_per_mtok": 2.40},
+  "gemini-3.1-pro-preview": {"in_per_mtok": 2.00, "out_per_mtok": 12.00},
+  "gemini-3.1-pro": {"in_per_mtok": 2.00, "out_per_mtok": 12.00}
+}
