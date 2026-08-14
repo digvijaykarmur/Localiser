@@ -8,6 +8,7 @@ workspace_data/
 !workspace_data/.gitkeep
 web/node_modules/
 web/dist/
+web/tsconfig.tsbuildinfo
 .DS_Store
 *.log
 .pytest_cache/

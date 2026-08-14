@@ -82,13 +82,15 @@ def doctor():
     except Exception as e:
         rows.append(("playwright_chromium", False, str(e)))
 
-    # Vertex auth
+    # Vertex auth — optional for offline ingest/clean/typeset; required for AI stages
+    vertex_ok = True
     if not cfg.gcp_project or not cfg.google_application_credentials:
+        vertex_ok = False
         rows.append(
             (
                 "vertex_auth",
                 False,
-                "Set GOOGLE_APPLICATION_CREDENTIALS + GCP_PROJECT in .env (open env and paste keys)",
+                "OPTIONAL until AI stages — set GOOGLE_APPLICATION_CREDENTIALS + GCP_PROJECT in .env",
             )
         )
     else:
@@ -99,6 +101,7 @@ def doctor():
             result = asyncio.run(vertex.smoke_test())
             rows.append(("vertex_auth", True, f"models={result.get('models')}"))
         except Exception as e:
+            vertex_ok = False
             rows.append(("vertex_auth", False, str(e)))
 
     # Latest models pinned
@@ -114,21 +117,26 @@ def doctor():
     table.add_column("Check")
     table.add_column("Pass")
     table.add_column("Detail")
-    failed = 0
+    hard_failed = 0
     for name, ok, detail in rows:
-        table.add_row(name, "[green]PASS[/]" if ok else "[red]FAIL[/]", detail)
-        if not ok and name not in ("pillow_raqm", "vertex_auth"):
-            # vertex may be pending user credentials — still count as fail but expected
-            failed += 1
-        elif not ok:
-            failed += 1
+        label = "[green]PASS[/]" if ok else (
+            "[yellow]WARN[/]" if name == "vertex_auth" else "[red]FAIL[/]"
+        )
+        table.add_row(name, label, detail)
+        if not ok and name != "vertex_auth":
+            hard_failed += 1
 
     console.print(table)
     console.print(
         "\nModels (strictly latest): "
         + ", ".join(f"{k}={v}" for k, v in cfg.models.items())
     )
-    if failed:
+    if not vertex_ok:
+        console.print(
+            "\n[yellow]Vertex not configured — ingest / clean / typeset / UI still work. "
+            "Add keys to .env before bible / translate / story.[/]"
+        )
+    if hard_failed:
         raise typer.Exit(code=1)
 
 
