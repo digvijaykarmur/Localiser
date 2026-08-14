@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "localiser"
+version = "0.1.0"
+description = "Local-first Hindi manga localization studio"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.116",
+  "uvicorn[standard]>=0.35",
+  "sqlalchemy>=2.0",
+  "pydantic-settings>=2.10",
+  "python-dotenv>=1.1",
+  "pillow>=11.3",
+  "numpy>=2.2",
+  "opencv-python-headless>=4.12",
+  "python-multipart>=0.0.20",
+  "structlog>=25.4",
+]
+
+[project.optional-dependencies]
+vertex = ["google-genai>=1.29"]
+dev = ["httpx>=0.28", "pytest>=8.4", "pytest-asyncio>=1.1"]
+
+[project.scripts]
+localiser = "localiser.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/localiser"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
