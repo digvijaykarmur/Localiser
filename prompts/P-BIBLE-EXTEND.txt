@@ -1,0 +1,16 @@
+Here is the LOCKED series bible. You may not change anything in it.
+
+{compacted_bible}
+
+Here is new material from Chapter {n}: transcribed text and new face crops.
+
+Propose ONLY additions:
+  new_characters, new_places, new_glossary_terms, new_sfx, alias_additions
+For any face crop that matches an existing character, say so instead of
+proposing a new character. When unsure, mark needs_review: true — a human
+will decide. Do not guess.
+
+Output JSON only:
+{"new_characters":[...],"new_places":[...],"new_glossary_terms":[...],
+ "new_sfx":[...],"alias_additions":[...],"matched_existing":[...],
+ "needs_review":[...]}

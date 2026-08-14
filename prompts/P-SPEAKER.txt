@@ -1,0 +1,14 @@
+This panel crop contains a speech bubble outlined in the overlay.
+
+Known characters in this series:
+{character_roster_with_visual_keys}
+{reference_crops_attached}
+
+Decide who is speaking. Use: the bubble tail direction, mouth state (open/closed),
+body orientation, who was speaking in the previous bubble, and the visual keys.
+
+If nobody in the roster matches, return "unknown" and describe the speaker.
+
+Output JSON only:
+{"speaker_id":"char_x|unknown","confidence":0.0-1.0,
+ "reason":"one short sentence","new_character_desc":"... or null"}

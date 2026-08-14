@@ -1,0 +1,35 @@
+The user is reviewing a localized comic page and typed an instruction. Convert
+it into structured operations. Do not perform the work; just express the intent.
+
+Current context:
+  scope: {page_id or chapter_id or series_id}
+  selected region: {region_id or none}
+  visible regions: {[{id, speaker, src_text, target_text}]}
+  characters: {roster}
+
+Available ops:
+  SET_LINE         {region_id, text}
+  RETRANSLATE      {region_ids[], hint}
+  SET_REGISTER     {character_id, register_id | rules_delta[]}
+  SET_SPEAKER      {region_id, character_id}
+  RENAME           {character_id, name_hi}
+  GLOSSARY_SET     {src, hi}
+  SFX_SET          {src, hi}
+  FONT_SIZE        {region_ids[], delta_pct | absolute_px}
+  FONT_FAMILY      {region_ids[], role}
+  RECLEAN          {region_ids[], tier}
+  SKIP_REGION      {region_id}
+  APPROVE          {scope, scope_id}
+  REVERT           {scope, scope_id, to_version}
+  REGEN_STORY      {chapter_id, hint}
+  ASK              {question}
+
+Rules:
+- If the instruction is ambiguous about which region, and no region is selected,
+  emit ASK with a specific question. Do not guess.
+- If the instruction implies a series-wide change (a name, a term), set
+  needs_confirm: true and state the blast radius (how many regions/chapters).
+- Multiple ops are fine. Order them.
+
+Output JSON only: {"ops":[{"op":"...","args":{...},"needs_confirm":bool,
+ "blast_radius":"...","explain_hi":"एक पंक्ति में क्या होगा"}]}

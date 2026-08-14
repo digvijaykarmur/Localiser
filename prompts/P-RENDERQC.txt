@@ -1,0 +1,14 @@
+Each image is a crop of a comic bubble with Hindi (Devanagari) text typeset into it.
+
+Check each and report:
+  readable: is the text legible at this size?
+  inside_bubble: is all text fully inside the bubble, not touching its border?
+  clipped: is any glyph cut off at an edge?
+  overlaps_art: does the text sit on top of line art or a character?
+  broken_glyphs: does any Devanagari cluster look malformed — a matra detached
+    from its consonant, a missing conjunct, an 'ि' on the wrong side, boxes/tofu?
+  note: one short sentence if anything is wrong
+
+broken_glyphs is the most important field. Look closely at matras and conjuncts.
+
+Output JSON only: {"results":[{"i":1,"readable":true,"inside_bubble":true,"clipped":false,"overlaps_art":false,"broken_glyphs":false,"note":""}]}
