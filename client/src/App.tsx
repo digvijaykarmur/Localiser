@@ -43,10 +43,13 @@ export default function App() {
     event.preventDefault();
     setError(null);
     try {
-      await api.addEntry(newKey, newDescription);
+      // Append the created entry instead of a full refresh so any in-flight
+      // cell edits elsewhere in the table are not clobbered by stale data.
+      const created = await api.addEntry(newKey, newDescription);
+      setEntries((prev) => [...prev, created]);
       setNewKey("");
       setNewDescription("");
-      await refresh();
+      setProgress(await api.getProgress());
     } catch (err) {
       setError((err as Error).message);
     }
@@ -75,7 +78,8 @@ export default function App() {
     setError(null);
     try {
       await api.deleteEntry(key);
-      await refresh();
+      setEntries((prev) => prev.filter((e) => e.key !== key));
+      setProgress(await api.getProgress());
     } catch (err) {
       setError((err as Error).message);
     }
