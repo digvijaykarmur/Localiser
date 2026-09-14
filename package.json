@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "concurrently -k -n next,worker -c cyan,magenta \"next dev -p 3000\" \"tsx watch src/workers/index.ts\"",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently -k -n next,worker -c cyan,magenta \"next start -p 3000\" \"tsx src/workers/index.ts\"",
+    "ready": "tsx scripts/ready.ts",
+    "promo": "tsx scripts/run-promo.ts",
+    "e2e:sc": "tsx scripts/e2e-sc.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",

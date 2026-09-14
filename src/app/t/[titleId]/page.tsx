@@ -126,7 +126,7 @@ function ComposeForm({ titleId, intel }: { titleId: string; intel: TitleIntellig
   const [angleId, setAngleId] = useState(intel.angles[0]?.id ?? "");
   const [format, setFormat] = useState<"SC" | "CP" | "SU">("SC");
   const [duration, setDuration] = useState<20 | 30 | 45 | 60>(20);
-  const [jobId, setJobId] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [dialect, setDialect] = useState("hry");
 
@@ -141,38 +141,63 @@ function ComposeForm({ titleId, intel }: { titleId: string; intel: TitleIntellig
   }, [titleId]);
 
   async function submit() {
+    if (!angleId) {
+      setErr("Build intelligence first so an angle exists.");
+      return;
+    }
     setErr(null);
-    const recipeRes = await fetch("/api/v1/recipes", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        title_id: titleId,
-        angle_id: angleId,
-        format,
-        dialect,
-        duration_s: duration,
-        ratios: ["16:9", "9:16", "1:1"],
-        source_window: format === "SC" ? { start_ms: 5000, end_ms: 25000 } : null,
-        persona_id: format === "SU" ? "persona_local" : null,
-        music_brief: format === "SC" ? null : "sparse rural percussion, no vocal",
-        cta_variant: "default",
-        created_by: "local-operator",
-      }),
-    });
-    const recipe = await recipeRes.json();
-    if (!recipeRes.ok) return setErr(recipe.error);
-    const jobRes = await fetch("/api/v1/jobs", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ recipe_id: recipe.recipe.id }),
-    });
-    const job = await jobRes.json();
-    if (!jobRes.ok) return setErr(job.error);
-    setJobId(job.job_id);
+    setBusy(true);
+    try {
+      const recipeRes = await fetch("/api/v1/recipes", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          title_id: titleId,
+          angle_id: angleId,
+          format,
+          dialect,
+          duration_s: duration,
+          ratios: ["16:9", "9:16", "1:1"],
+          source_window: format === "SC" ? { start_ms: 5000, end_ms: 25000 } : null,
+          persona_id: format === "SU" ? "persona_local" : null,
+          music_brief: format === "SC" ? null : "sparse rural percussion, no vocal",
+          cta_variant: "default",
+          created_by: "local-operator",
+        }),
+      });
+      const recipe = await recipeRes.json();
+      if (!recipeRes.ok) {
+        setErr(recipe.error);
+        return;
+      }
+      const jobRes = await fetch("/api/v1/jobs", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ recipe_id: recipe.recipe.id }),
+      });
+      const job = await jobRes.json();
+      if (!jobRes.ok) {
+        setErr(job.error);
+        return;
+      }
+      window.location.href = `/j/${job.job_id}`;
+    } finally {
+      setBusy(false);
+    }
   }
+
+  const formatHelp =
+    format === "SC"
+      ? "Single Clip — source audio, burned captions, fastest (good first promo)."
+      : format === "CP"
+        ? "Caption Promo — dialect VO + music + caption cards (uses ElevenLabs when live)."
+        : "Split UGC — presenter + source stack (Veo is still a local stand-in).";
 
   return (
     <div className="panel grid" style={{ gap: 12, maxWidth: 560 }}>
+      {!intel.angles.length && (
+        <div className="muted">No angles yet. Click Build intelligence first.</div>
+      )}
       <label>
         Angle
         <select className="input" style={{ width: "100%", marginTop: 6 }} value={angleId} onChange={(e) => setAngleId(e.target.value)}>
@@ -191,6 +216,7 @@ function ComposeForm({ titleId, intel }: { titleId: string; intel: TitleIntellig
           <option value="SU">Split UGC</option>
         </select>
       </label>
+      <div className="muted">{formatHelp}</div>
       <label>
         Duration
         <select className="input" style={{ width: "100%", marginTop: 6 }} value={duration} onChange={(e) => setDuration(Number(e.target.value) as 20 | 30 | 45 | 60)}>
@@ -200,15 +226,10 @@ function ComposeForm({ titleId, intel }: { titleId: string; intel: TitleIntellig
           <option value={60}>60s</option>
         </select>
       </label>
-      <button className="btn primary" onClick={submit}>
-        Lock recipe and run
+      <button className="btn primary" disabled={busy || !intel.angles.length} onClick={() => void submit()}>
+        {busy ? "Starting…" : "Lock recipe and run"}
       </button>
       {err && <div className="muted">{err}</div>}
-      {jobId && (
-        <a className="btn" href={`/j/${jobId}`}>
-          Open job {jobId}
-        </a>
-      )}
     </div>
   );
 }

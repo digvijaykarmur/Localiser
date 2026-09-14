@@ -9,7 +9,13 @@ const LINKS = [
   { href: "/dialects", label: "Dialects" },
 ];
 
-export function Shell({ children }: { children: React.ReactNode }) {
+export function Shell({
+  children,
+  status,
+}: {
+  children: React.ReactNode;
+  status?: React.ReactNode;
+}) {
   const path = usePathname();
   return (
     <div className="shell">
@@ -22,6 +28,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </Link>
           ))}
         </nav>
+        <div style={{ marginLeft: "auto" }}>{status}</div>
       </header>
       <div className="main">{children}</div>
     </div>

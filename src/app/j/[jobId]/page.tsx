@@ -42,6 +42,8 @@ export default function JobPage({ params }: { params: { jobId: string } }) {
   const [note, setNote] = useState("");
   const players = useRef<Record<string, HTMLVideoElement | null>>({});
 
+  const [queuedSince, setQueuedSince] = useState<number | null>(null);
+
   const refresh = useCallback(async () => {
     const r = await fetch(`/api/v1/jobs/${params.jobId}`);
     const j = await r.json();
@@ -50,6 +52,11 @@ export default function JobPage({ params }: { params: { jobId: string } }) {
     setCost(j.cost_inr ?? 0);
     setRecipeId(j.job.recipe_id);
     setLedgerRows(j.ledger ?? []);
+    if (j.job.status === "queued") {
+      setQueuedSince((prev) => prev ?? Date.now());
+    } else {
+      setQueuedSince(null);
+    }
     if (j.job.status === "completed" || j.job.stage === "ASSEMBLE" || j.job.stage === "COMPOSE" || j.job.stage === "QC") {
       const next: Record<string, Timeline> = {};
       for (const ratio of RATIOS) {
@@ -107,9 +114,20 @@ export default function JobPage({ params }: { params: { jobId: string } }) {
     await refresh();
   }
 
+  async function retry() {
+    await fetch(`/api/v1/jobs/${params.jobId}/retry`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ from_stage: "PLAN" }),
+    });
+    await refresh();
+  }
+
   const token = (ratio: string) => ratio.replace(":", "x");
   const src = (ratio: string) =>
     recipeId ? `/storage/renders/${recipeId}/${token(ratio)}.mp4` : "";
+  const ready = job?.status === "completed";
+  const stuckQueued = job?.status === "queued" && queuedSince != null && Date.now() - queuedSince > 8000;
 
   return (
     <div className="grid" style={{ gap: 16 }}>
@@ -119,11 +137,36 @@ export default function JobPage({ params }: { params: { jobId: string } }) {
           <div className="muted tabular">
             {job?.status} · {job?.stage} · {job?.progress}%
           </div>
+          <div
+            style={{
+              marginTop: 8,
+              height: 6,
+              width: 240,
+              background: "#121214",
+              borderRadius: 99,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${job?.progress ?? 0}%`,
+                height: "100%",
+                background: job?.status === "failed" ? "var(--rejected)" : "var(--accent)",
+              }}
+            />
+          </div>
         </div>
-        <div className="panel" style={{ minWidth: 240 }}>
-          <div className="muted">Cost</div>
-          <div className="tabular" style={{ fontSize: 22 }}>
-            ₹{cost.toFixed(2)} / ₹{envelope}
+        <div className="row">
+          {job?.status === "failed" && (
+            <button className="btn" onClick={() => void retry()}>
+              Retry from PLAN
+            </button>
+          )}
+          <div className="panel" style={{ minWidth: 240 }}>
+            <div className="muted">Cost</div>
+            <div className="tabular" style={{ fontSize: 22 }}>
+              ₹{cost.toFixed(2)} / ₹{envelope}
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +177,19 @@ export default function JobPage({ params }: { params: { jobId: string } }) {
           </button>
         ))}
       </div>
-      {job?.error && <div className="panel">Error: {job.error}</div>}
+      {stuckQueued && (
+        <div className="panel">
+          Job is still queued. `pnpm dev` or `pnpm start` must run both Next and the worker.
+        </div>
+      )}
+      {job?.error && (
+        <div className="panel">
+          Error: {job.error}{" "}
+          <button className="btn" style={{ marginLeft: 8 }} onClick={() => void retry()}>
+            Retry
+          </button>
+        </div>
+      )}
 
       {tab === "plan" && (
         <div className="grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
@@ -151,28 +206,44 @@ export default function JobPage({ params }: { params: { jobId: string } }) {
       {tab === "timeline" && <TimelineInspector timelines={timelines} />}
 
       {tab === "preview" && (
-        <div className="row" style={{ alignItems: "flex-start", justifyContent: "center", gap: 16 }}>
-          <Player
-            ratio="16:9"
-            src={src("16:9")}
-            width={320}
-            height={180}
-            register={(el) => (players.current["16:9"] = el)}
-          />
-          <Player
-            ratio="9:16"
-            src={src("9:16")}
-            width={270}
-            height={480}
-            register={(el) => (players.current["9:16"] = el)}
-          />
-          <Player
-            ratio="1:1"
-            src={src("1:1")}
-            width={270}
-            height={270}
-            register={(el) => (players.current["1:1"] = el)}
-          />
+        <div className="grid" style={{ gap: 16 }}>
+          {!ready && (
+            <div className="muted">
+              Renders appear here when compose finishes ({job?.stage ?? "…"} {job?.progress ?? 0}%).
+            </div>
+          )}
+          <div className="row" style={{ alignItems: "flex-start", justifyContent: "center", gap: 16 }}>
+            <Player
+              ratio="16:9"
+              src={ready ? src("16:9") : ""}
+              width={320}
+              height={180}
+              register={(el) => (players.current["16:9"] = el)}
+            />
+            <Player
+              ratio="9:16"
+              src={ready ? src("9:16") : ""}
+              width={270}
+              height={480}
+              register={(el) => (players.current["9:16"] = el)}
+            />
+            <Player
+              ratio="1:1"
+              src={ready ? src("1:1") : ""}
+              width={270}
+              height={270}
+              register={(el) => (players.current["1:1"] = el)}
+            />
+          </div>
+          {ready && recipeId && (
+            <div className="row" style={{ justifyContent: "center" }}>
+              {RATIOS.map((ratio) => (
+                <a key={ratio} className="btn" href={src(ratio)} download>
+                  Download {ratio}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

@@ -1,9 +1,7 @@
 import { jsonOk, jsonError, readJson } from "@/lib/http";
 import { RetryRequest } from "@/domain";
 import { z } from "zod";
-import { env } from "@/lib/env";
-import { runPipeline } from "@/services/pipeline";
-import { enqueuePipeline } from "@/workers/index";
+import { kickoffPipeline } from "@/services/kickoff";
 import { db } from "@/db/client";
 import { jobs } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -19,8 +17,7 @@ export async function POST(req: Request, ctx: { params: { id: string } }) {
       .update(jobs)
       .set({ status: "queued", error: null, updatedAt: new Date() })
       .where(eq(jobs.id, ctx.params.id));
-    if (env.SNAPSHOT_MODE) void runPipeline(ctx.params.id, body.from_stage).catch(console.error);
-    else await enqueuePipeline(ctx.params.id, body.from_stage);
+    await kickoffPipeline(ctx.params.id, body.from_stage);
     return jsonOk(Envelope, { job_id: ctx.params.id, from_stage: body.from_stage });
   } catch (e) {
     return jsonError((e as Error).message, 400);
