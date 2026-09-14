@@ -16,7 +16,9 @@ import { storage } from "@/providers/storage";
 import { runFfmpeg } from "@/lib/ffmpeg";
 import { nowIso } from "@/lib/hash";
 import { costMeter } from "@/services/cost/meter";
-import { env } from "@/lib/env";
+import { env, providers } from "@/lib/env";
+import { intelligenceFromLive } from "@/services/intelligence/live";
+import { ensureSourceMedia } from "@/services/media/source";
 
 export async function ingestTitle(titleId: string): Promise<Title> {
   const antryami = getAntryami();
@@ -24,7 +26,7 @@ export async function ingestTitle(titleId: string): Promise<Title> {
   let sceneRows = await antryami.getScenes(titleId);
   const ch = getClickHouse();
   const chScenes = await ch.scenesForTitle(titleId);
-  if (chScenes.length) {
+  if (!sceneRows.length && chScenes.length) {
     sceneRows = chScenes.map((s) => ({
       scene_id: s.scene_id,
       start_ms: s.start_ms,
@@ -140,23 +142,34 @@ export function loadSnapshotIntelligence(titleId: string): TitleIntelligence | n
 
 export async function buildIntelligence(titleId: string): Promise<TitleIntelligence> {
   const title = await ingestTitle(titleId);
+  const antryami = getAntryami();
   const snap = loadSnapshotIntelligence(titleId);
-  let intel: TitleIntelligence;
-  if (snap) {
-    intel = snap;
-  } else {
-    intel = TitleIntelligence.parse({
-      title_id: titleId,
-      evidence: [],
-      angles: [],
-      built_at: nowIso(),
+  let intel: TitleIntelligence | null = null;
+  if (providers.antryami) {
+    const scenes = await antryami.getScenes(titleId);
+    const shots = antryami.getShots ? await antryami.getShots(titleId) : [];
+    intel = intelligenceFromLive({ title, scenes, shots });
+    const assets = antryami.getAssets ? await antryami.getAssets(titleId) : { video_url: null, poster_url: title.artwork_url, runtime_sec: title.runtime_ms / 1000 };
+    await ensureSourceMedia({
+      titleId,
+      videoUrl: assets.video_url,
+      posterUrl: assets.poster_url || title.artwork_url,
+      durationS: Math.min(90, Math.max(30, assets.runtime_sec || 40)),
     });
+  } else if (snap) {
+    intel = snap;
+  }
+  if (!intel || !intel.angles.length) {
+    intel = snap ?? intel;
+  }
+  if (!intel?.angles.length) {
+    throw new Error(`no intelligence for ${titleId} — Antaryami scenes/shots empty`);
   }
 
   const sourcePath = path.resolve(process.cwd(), "data/media", `${titleId}.mp4`);
   const sceneRows = await db.select().from(scenes).where(eq(scenes.titleId, titleId));
   if (fs.existsSync(sourcePath)) {
-    for (const s of sceneRows) {
+    for (const s of sceneRows.slice(0, 6)) {
       try {
         await extractSceneFrames({
           titleId,

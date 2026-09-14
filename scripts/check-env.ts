@@ -132,8 +132,33 @@ async function main() {
     }
   }
 
-  if (!providers.antryami) {
-    console.log("antryami: snapshot (ANTRYAMI_BASE_URL / ANTRYAMI_API_URL is empty)");
+  if (providers.antryami) {
+    if (!process.env.ANTRYAMI_BASE_URL && !process.env.ANTRYAMI_API_URL && !process.env.ANTARYAMI_BASE_URL) {
+      setEnvKey("ANTRYAMI_BASE_URL", env.ANTRYAMI_BASE_URL);
+      console.log("antryami: wrote ANTRYAMI_BASE_URL", env.ANTRYAMI_BASE_URL);
+    }
+    try {
+      const base = env.ANTRYAMI_BASE_URL.replace(/\/$/, "");
+      const root = await fetch(base, {
+        headers: { authorization: `Bearer ${env.ANTRYAMI_API_KEY}`, accept: "application/json" },
+        signal: AbortSignal.timeout(20000),
+      });
+      console.log("antryami ping:", root.ok ? "ok" : `FAIL ${root.status}`);
+      const list = await fetch(`${base}/content`, {
+        headers: { authorization: `Bearer ${env.ANTRYAMI_API_KEY}`, accept: "application/json" },
+        signal: AbortSignal.timeout(45000),
+      });
+      if (!list.ok) {
+        console.log("antryami content:", `FAIL ${list.status}`);
+      } else {
+        const json = (await list.json()) as { count?: number; items?: unknown[] };
+        console.log("antryami content:", json.count ?? json.items?.length ?? 0, "titles");
+      }
+    } catch (e) {
+      console.log("antryami ping: FAIL", (e as Error).message);
+    }
+  } else {
+    console.log("antryami: snapshot (ANTRYAMI_API_KEY empty)");
   }
 }
 

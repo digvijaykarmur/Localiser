@@ -18,8 +18,8 @@ pnpm dev            # Next on :3000 + BullMQ worker
 
 Open http://localhost:3000
 
-1. Library → **Khet Ke Log** (`hry`) or **Thar Ki Dhun** (`raj`).
-2. **Build intelligence** if the evidence grid is empty.
+1. Library → a **live Antaryami title** (Haryanvi catalogue uses `har`, shown as `hry`). Snapshot titles (`ttl_hry_01`) are fallback only.
+2. **Build intelligence** — scenes, shots, and dialogue come from Antaryami; ClickHouse supplies episode scene timings when Antaryami scenes are empty.
 3. **compose** tab → format:
    - **SC** (Single Clip) — fastest, source audio, first promo to run.
    - **CP** (Caption Promo) — dialect VO + music; uses live ElevenLabs when `SNAPSHOT_MODE=false`.
@@ -30,12 +30,14 @@ Open http://localhost:3000
 CLI (same pipeline, no browser):
 
 ```bash
-pnpm promo -- --title ttl_hry_01 --format SC --duration 20
+pnpm promo -- --title jalebi-har-s01e03 --format SC --duration 20
 ```
 
 Outputs land in `public/storage/renders/<recipeId>/{16x9,9x16,1x1}.mp4`.
 
-`SNAPSHOT_MODE=false` uses live Vertex / ElevenLabs / ClickHouse when those credentials exist. `SNAPSHOT_MODE=true` forces snapshots (offline). Header pills show which adapters are live. Antryami stays snapshot until `ANTRYAMI_API_URL` is set.
+`SNAPSHOT_MODE=false` uses live Vertex / ElevenLabs / ClickHouse / Antaryami when those credentials exist. `SNAPSHOT_MODE=true` forces snapshots (offline). Header pills show which adapters are live.
+
+Antaryami host is `https://antaryami.stage.in/api/v1` (`ANTRYAMI_*` / `ANTARYAMI_*` aliases). Catalogue dialect codes include `har` (mapped to engine `hry`). Episode video files on CMS S3 are private (403); intelligence is still live, and source picture may be a poster stand-in until a signed/streamable proxy exists.
 
 Production-shaped local process (after `pnpm build`):
 

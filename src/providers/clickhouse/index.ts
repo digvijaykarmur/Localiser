@@ -55,7 +55,14 @@ export class LiveClickHouse implements ClickHousePort {
       path.resolve(process.cwd(), "src/providers/clickhouse/queries/scenes.sql"),
       "utf8",
     );
-    return this.query<SceneRow>(sql, { id: titleId });
+    return this.query<SceneRow>(sql, { id: titleId }).then((rows) =>
+      rows.map((r) => ({
+        ...r,
+        start_ms: Number(r.start_ms),
+        end_ms: Number(r.end_ms),
+        has_dialogue: Boolean((r as unknown as { has_dialogue: unknown }).has_dialogue),
+      })),
+    );
   }
 
   async promoPerformance(): Promise<PerformanceRow[]> {
@@ -79,14 +86,16 @@ export function getClickHouse(): ClickHousePort {
     async scenesForTitle(titleId: string) {
       try {
         return await live.scenesForTitle(titleId);
-      } catch {
+      } catch (e) {
+        console.warn("clickhouse scenes live failed", (e as Error).message.slice(0, 200));
         return snap.scenesForTitle(titleId);
       }
     },
     async promoPerformance() {
       try {
         return await live.promoPerformance();
-      } catch {
+      } catch (e) {
+        console.warn("clickhouse performance live failed", (e as Error).message.slice(0, 200));
         return snap.promoPerformance();
       }
     },

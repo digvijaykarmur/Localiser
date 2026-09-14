@@ -40,11 +40,15 @@ export default function LibraryPage() {
       </div>
       {err && <div className="muted">{err}</div>}
       <div className="panel">
-        <div className="muted">Make a promo</div>
+        <div className="muted">Make a promo from live catalogue</div>
         <ol style={{ margin: "8px 0 0", paddingLeft: 18, lineHeight: 1.6 }}>
-          <li>Open a title (start with <strong>Khet Ke Log</strong> / hry).</li>
           <li>
-            Click <strong>Build intelligence</strong> if evidence is empty.
+            Open a live title (Haryanvi is <strong>har</strong> in Antaryami, shown here as{" "}
+            <strong>hry</strong>). Snapshot stand-ins are only used if the API key is missing.
+          </li>
+          <li>
+            Click <strong>Build intelligence</strong> — scenes/shots come from Antaryami, scene
+            timings fall back to ClickHouse.
           </li>
           <li>
             Open the <strong>compose</strong> tab, pick format (SC is fastest), duration, then{" "}
@@ -53,12 +57,24 @@ export default function LibraryPage() {
           <li>Wait on the job page. Preview 16:9 / 9:16 / 1:1, download, then review.</li>
         </ol>
         <div className="muted" style={{ marginTop: 8 }}>
-          CLI: <span className="tabular">pnpm promo -- --title ttl_hry_01 --format SC</span>
+          CLI:{" "}
+          <span className="tabular">pnpm promo -- --title jalebi-har-s01e03 --format SC</span>
+        </div>
+        <div className="muted" style={{ marginTop: 8 }}>
+          Episode MP4s on CMS S3 are private (403). Intelligence still uses real scenes, shots,
+          and dialogue; picture may be a poster stand-in until a signed proxy exists.
         </div>
       </div>
       <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
         {titles.map((t) => (
           <Link key={t.id} href={`/t/${t.id}`} className="panel">
+            {t.artwork_url && (
+              <img
+                src={t.artwork_url}
+                alt=""
+                style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 6, marginBottom: 10 }}
+              />
+            )}
             <div className="muted tabular">{t.dialect.toUpperCase()}</div>
             <h2 style={{ marginTop: 8 }}>{t.name}</h2>
             <div className="devanagari" style={{ marginTop: 6 }}>
