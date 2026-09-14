@@ -1,0 +1,51 @@
+[
+  {
+    "scene_id": "sc_hry_01",
+    "start_ms": 0,
+    "end_ms": 5000,
+    "frame_url": null,
+    "has_dialogue": false
+  },
+  {
+    "scene_id": "sc_hry_02",
+    "start_ms": 5000,
+    "end_ms": 10000,
+    "frame_url": null,
+    "has_dialogue": true
+  },
+  {
+    "scene_id": "sc_hry_03",
+    "start_ms": 10000,
+    "end_ms": 15000,
+    "frame_url": null,
+    "has_dialogue": true
+  },
+  {
+    "scene_id": "sc_hry_04",
+    "start_ms": 15000,
+    "end_ms": 20000,
+    "frame_url": null,
+    "has_dialogue": false
+  },
+  {
+    "scene_id": "sc_hry_05",
+    "start_ms": 20000,
+    "end_ms": 25000,
+    "frame_url": null,
+    "has_dialogue": true
+  },
+  {
+    "scene_id": "sc_hry_06",
+    "start_ms": 25000,
+    "end_ms": 32000,
+    "frame_url": null,
+    "has_dialogue": false
+  },
+  {
+    "scene_id": "sc_hry_07",
+    "start_ms": 32000,
+    "end_ms": 40000,
+    "frame_url": null,
+    "has_dialogue": false
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "code": "ben",
+  "name": "Bengali",
+  "script": "bengali",
+  "channel_id": "stage_bengali",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "ben_voice_stage_01",
+    "model": "eleven_v3",
+    "language_code": "bn",
+    "settings": { "stability": 0.5, "similarity_boost": 0.8, "style": 0.3, "speed": 0.98 }
+  },
+  "rhythm": {
+    "words_per_second": 2.1,
+    "sentence_max_words": 10,
+    "caption_max_words": 6,
+    "beat_min_ms": 1800,
+    "beat_max_ms": 4500,
+    "hook_max_ms": 3000
+  },
+  "lexicon": { "replace": {}, "prefer": [], "avoid": [] },
+  "taboo": { "words": [], "themes": [] },
+  "cta_templates": {
+    "default": "এবার দেখুন — {title}, শুধু STAGE-এ"
+  },
+  "typography": {
+    "caption_font": "NotoSansBengali-Bold",
+    "caption_size_916": 88,
+    "caption_size_11": 64,
+    "caption_size_169": 56,
+    "line_height": 1.28
+  },
+  "register": "thin pack — voice and rhythm only"
+}

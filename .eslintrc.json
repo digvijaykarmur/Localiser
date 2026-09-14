@@ -1,0 +1,37 @@
+{
+  "extends": "next/core-web-vitals",
+  "overrides": [
+    {
+      "files": ["src/domain/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/providers", "@/providers/*", "@/services", "@/services/*", "@/app", "@/app/*", "@/workers", "@/workers/*", "@/db", "@/db/*"],
+                "message": "domain is pure: no I/O, no providers/services/app/db imports."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/services/composer/**/*", "src/services/qc/deterministic.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/providers/vertex", "@/providers/vertex/*", "@/providers/elevenlabs", "@/providers/elevenlabs/*"],
+                "message": "composer and deterministic QC must not import model providers."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

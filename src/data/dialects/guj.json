@@ -1,0 +1,34 @@
+{
+  "code": "guj",
+  "name": "Gujarati",
+  "script": "gujarati",
+  "channel_id": "stage_gujarati",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "guj_voice_stage_01",
+    "model": "eleven_v3",
+    "language_code": "gu",
+    "settings": { "stability": 0.5, "similarity_boost": 0.8, "style": 0.3, "speed": 1.0 }
+  },
+  "rhythm": {
+    "words_per_second": 2.3,
+    "sentence_max_words": 10,
+    "caption_max_words": 6,
+    "beat_min_ms": 1600,
+    "beat_max_ms": 4200,
+    "hook_max_ms": 3000
+  },
+  "lexicon": { "replace": {}, "prefer": [], "avoid": [] },
+  "taboo": { "words": [], "themes": [] },
+  "cta_templates": {
+    "default": "હવે જુઓ — {title}, ફક્ત STAGE પર"
+  },
+  "typography": {
+    "caption_font": "NotoSansDevanagari-Bold",
+    "caption_size_916": 88,
+    "caption_size_11": 64,
+    "caption_size_169": 56,
+    "line_height": 1.28
+  },
+  "register": "thin pack — voice and rhythm only"
+}

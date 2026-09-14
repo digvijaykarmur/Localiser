@@ -1,0 +1,15 @@
+{
+  "id": "ttl_hry_01",
+  "name": "Khet Ke Log",
+  "name_native": "खेत के लोग",
+  "dialect": "hry",
+  "synopsis": "A Haryanvi family holds a farm together when a land deal turns sour.",
+  "runtime_ms": 2400000,
+  "spoiler_boundary_ms": 1440000,
+  "genre": [
+    "drama",
+    "family"
+  ],
+  "artwork_url": null,
+  "deep_link": "stage://title/ttl_hry_01"
+}

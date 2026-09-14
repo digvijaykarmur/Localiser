@@ -1,0 +1,48 @@
+{
+  "name": "stage-promo-engine",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.3",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n next,worker -c cyan,magenta \"next dev -p 3000\" \"tsx watch src/workers/index.ts\"",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "assets": "tsx scripts/generate-assets.ts",
+    "e2e:sc": "tsx scripts/e2e-sc.ts",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bullmq": "^5.21.2",
+    "drizzle-orm": "^0.36.4",
+    "ioredis": "^5.4.2",
+    "next": "14.2.15",
+    "postgres": "^3.4.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "server-only": "^0.0.1",
+    "sharp": "^0.33.5",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "concurrently": "^9.1.0",
+    "drizzle-kit": "^0.28.1",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.15",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.6"
+  }
+}

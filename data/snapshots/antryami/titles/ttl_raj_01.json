@@ -1,0 +1,15 @@
+{
+  "id": "ttl_raj_01",
+  "name": "Thar Ki Dhun",
+  "name_native": "थार की धुन",
+  "dialect": "raj",
+  "synopsis": "Two musicians cross the desert with a secret song.",
+  "runtime_ms": 2100000,
+  "spoiler_boundary_ms": 1260000,
+  "genre": [
+    "drama",
+    "music"
+  ],
+  "artwork_url": null,
+  "deep_link": "stage://title/ttl_raj_01"
+}

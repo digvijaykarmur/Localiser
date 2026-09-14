@@ -1,0 +1,34 @@
+{
+  "code": "SU",
+  "name": "Split UGC",
+  "beats": { "min": 4, "max": 6 },
+  "uses": { "vo": false, "music": "bed", "presenter": true, "source_audio": "ducked" },
+  "presenter": {
+    "provider": "vertex.veo",
+    "generate_at_target_ratio": true,
+    "max_segment_ms": 8000
+  },
+  "caption_mode": "authored_cards",
+  "cta": "presenter_spoken_plus_card",
+  "cost_envelope_inr": 420,
+  "ratio_policy": {
+    "16:9": ["INSET", "STACKED"],
+    "1:1": ["STACKED"],
+    "9:16": ["STACKED", "GENERATED_NATIVE"]
+  },
+  "geometry": {
+    "9:16": {
+      "presenter": { "x": 0, "y": 0, "w": 1080, "h": 960 },
+      "source": { "x": 0, "y": 960, "w": 1080, "h": 608 },
+      "caption_band": { "x": 0, "y": 1568, "w": 1080, "h": 352 }
+    },
+    "1:1": {
+      "presenter": { "x": 0, "y": 0, "w": 1080, "h": 472 },
+      "source": { "x": 0, "y": 472, "w": 1080, "h": 608 }
+    },
+    "16:9": {
+      "source": { "x": 0, "y": 0, "w": 1920, "h": 1080 },
+      "presenter": { "x": 1400, "y": 620, "w": 460, "h": 400 }
+    }
+  }
+}
