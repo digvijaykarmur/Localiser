@@ -82,7 +82,14 @@ const vertexLocation = pick(
   "global",
 );
 const elevenKey = pick(process.env.ELEVENLABS_API_KEY);
-const antryamiUrl = pick(process.env.ANTRYAMI_BASE_URL, process.env.ANTRYAMI_API_URL);
+const antryamiKey = pick(process.env.ANTRYAMI_API_KEY, process.env.ANTARYAMI_API_KEY);
+const antryamiUrl = pick(
+  process.env.ANTRYAMI_BASE_URL,
+  process.env.ANTRYAMI_API_URL,
+  process.env.ANTARYAMI_BASE_URL,
+  process.env.ANTARYAMI_API_URL,
+  antryamiKey ? "https://antaryami.stage.in/api/v1" : "",
+);
 const clickhouseUrl = pick(process.env.CLICKHOUSE_URL);
 const clickhousePass = pick(process.env.CLICKHOUSE_PASSWORD, process.env.CLICKHOUSE_PASS);
 
@@ -121,7 +128,7 @@ export const env = Env.parse({
   ELEVENLABS_VOICE_ID: pick(process.env.ELEVENLABS_VOICE_ID),
   ELEVENLABS_MODEL: pick(process.env.ELEVENLABS_MODEL, "eleven_v3"),
   ANTRYAMI_BASE_URL: antryamiUrl,
-  ANTRYAMI_API_KEY: pick(process.env.ANTRYAMI_API_KEY),
+  ANTRYAMI_API_KEY: antryamiKey,
   CLICKHOUSE_URL: clickhouseUrl,
   CLICKHOUSE_USER: pick(process.env.CLICKHOUSE_USER),
   CLICKHOUSE_PASSWORD: clickhousePass,

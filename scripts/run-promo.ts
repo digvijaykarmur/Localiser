@@ -4,7 +4,7 @@ import { db, sql } from "@/db/client";
 import { recipes, titles } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Recipe } from "@/domain";
-import { getIntelligence } from "@/services/intelligence";
+import { getIntelligence, ingestTitle, buildIntelligence } from "@/services/intelligence";
 import { enqueueJob, runPipeline } from "@/services/pipeline";
 import { getFormat } from "@/lib/registry";
 import { getRedis } from "@/lib/redis";
@@ -24,12 +24,19 @@ async function main() {
   if (![20, 30, 45, 60].includes(duration)) throw new Error("duration must be 20|30|45|60");
   if (!["SC", "CP", "SU"].includes(format)) throw new Error("format must be SC|CP|SU");
 
-  const titleRow = (await db.select().from(titles).where(eq(titles.id, titleId)))[0];
-  if (!titleRow) throw new Error(`title ${titleId} not in db — run pnpm db:seed`);
+  let titleRow = (await db.select().from(titles).where(eq(titles.id, titleId)))[0];
+  if (!titleRow || providers.antryami) {
+    await ingestTitle(titleId);
+    titleRow = (await db.select().from(titles).where(eq(titles.id, titleId)))[0];
+  }
+  if (!titleRow) throw new Error(`title ${titleId} not found in Antaryami/ClickHouse or local db`);
   const dialect = titleRow.dialect;
-  const intel = await getIntelligence(titleId);
+  let intel = await getIntelligence(titleId);
   if (!intel?.angles.length) {
-    throw new Error(`intelligence missing for ${titleId} — open the title and click Build intelligence, or pnpm db:seed`);
+    intel = await buildIntelligence(titleId);
+  }
+  if (!intel?.angles.length) {
+    throw new Error(`intelligence missing for ${titleId}`);
   }
   const angle = intel.angles.find((a) => a.id.includes("conflict")) ?? intel.angles[0]!;
   const spec = getFormat(format);

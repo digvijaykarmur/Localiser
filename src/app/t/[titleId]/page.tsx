@@ -7,6 +7,7 @@ const SHOTS = ["ECU", "CU", "MCU", "MS", "TWO_SHOT", "GROUP", "WIDE", "INSERT", 
 
 export default function TitleWorkspace({ params }: { params: { titleId: string } }) {
   const [intel, setIntel] = useState<TitleIntelligence | null>(null);
+  const [titleName, setTitleName] = useState(params.titleId);
   const [tab, setTab] = useState<"evidence" | "angles" | "compose">("evidence");
   const [shot, setShot] = useState<string>("");
   const [busy, setBusy] = useState(false);
@@ -22,6 +23,13 @@ export default function TitleWorkspace({ params }: { params: { titleId: string }
 
   useEffect(() => {
     void load();
+    fetch(`/api/v1/titles?id=${encodeURIComponent(params.titleId)}`)
+      .then((r) => r.json())
+      .then((j) => {
+        const t = j.titles?.[0];
+        if (t?.name) setTitleName(t.name);
+      })
+      .catch(() => undefined);
   }, [params.titleId]);
 
   async function build() {
@@ -42,7 +50,7 @@ export default function TitleWorkspace({ params }: { params: { titleId: string }
   return (
     <div className="grid" style={{ gap: 16 }}>
       <div className="row" style={{ justifyContent: "space-between" }}>
-        <h1>Title workspace</h1>
+        <h1>{titleName}</h1>
         <button className="btn primary" disabled={busy} onClick={build}>
           {busy ? "Building…" : "Build intelligence"}
         </button>
@@ -131,7 +139,7 @@ function ComposeForm({ titleId, intel }: { titleId: string; intel: TitleIntellig
   const [dialect, setDialect] = useState("hry");
 
   useEffect(() => {
-    fetch("/api/v1/titles")
+    fetch(`/api/v1/titles?id=${encodeURIComponent(titleId)}`)
       .then((r) => r.json())
       .then((j) => {
         const t = (j.titles ?? []).find((x: { id: string }) => x.id === titleId);
