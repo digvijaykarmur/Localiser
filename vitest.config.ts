@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     testTimeout: 60_000,
+    env: { SNAPSHOT_MODE: "true" },
   },
   resolve: {
     alias: {

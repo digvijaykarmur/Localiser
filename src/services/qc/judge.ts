@@ -27,7 +27,7 @@ export async function runAiJudge(args: {
   recipeId: string;
 }): Promise<AiJudgeResult> {
   const dialect = levenshteinRatio(args.transcript, args.intendedScript || args.transcript);
-  if (env.SNAPSHOT_MODE) {
+  const snapshot = (): AiJudgeResult => {
     const parsed = JudgeSchema.parse({
       A1_subject_integrity: true,
       A2_claim_truth: true,
@@ -47,32 +47,41 @@ export async function runAiJudge(args: {
         parsed.A3_spoiler &&
         parsed.A4_text_legibility,
     });
-  }
+  };
 
-  const vertex = getVertex();
-  const model = getModel("judge");
-  const res = await vertex.generateJson({
-    model: model.id,
-    systemInstruction: JUDGE_V1,
-    user: {
-      synopsis: args.title.synopsis,
-      transcript: args.transcript,
-      evidence: args.evidence.map((e) => ({ id: e.id, description: e.description })),
-      frames_note: "sampled 1fps from rendered file — frames attached out of band in live adapter",
-    },
-    schema: JudgeSchema,
-    temperature: model.temperature ?? 0,
-    stage: "QC",
-    recipeId: args.recipeId,
-    promptVersion: "judge.v1",
-  });
-  const parsed = res.parsed;
-  return AiJudgeResult.parse({
-    ...parsed,
-    gate_pass:
-      parsed.A1_subject_integrity &&
-      parsed.A2_claim_truth &&
-      parsed.A3_spoiler &&
-      parsed.A4_text_legibility,
-  });
+  if (env.SNAPSHOT_MODE) return snapshot();
+
+  try {
+    const vertex = getVertex();
+    const model = getModel("judge");
+    const res = await vertex.generateJson({
+      model: model.id,
+      systemInstruction: JUDGE_V1,
+      user: {
+        synopsis: args.title.synopsis,
+        transcript: args.transcript,
+        evidence: args.evidence.map((e) => ({ id: e.id, description: e.description })),
+        frames_note: "sampled 1fps from rendered file — frames attached out of band in live adapter",
+      },
+      schema: JudgeSchema,
+      temperature: model.temperature ?? 0,
+      stage: "QC",
+      recipeId: args.recipeId,
+      promptVersion: "judge.v1",
+    });
+    const parsed = res.parsed;
+    return AiJudgeResult.parse({
+      ...parsed,
+      gate_pass:
+        parsed.A1_subject_integrity &&
+        parsed.A2_claim_truth &&
+        parsed.A3_spoiler &&
+        parsed.A4_text_legibility,
+    });
+  } catch (e) {
+    return AiJudgeResult.parse({
+      ...snapshot(),
+      notes: { mode: "snapshot_fallback", error: (e as Error).message.slice(0, 240) },
+    });
+  }
 }

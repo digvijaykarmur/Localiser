@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Title, SPOILER_BOUNDARY_DEFAULT_FRAC } from "@/domain";
 import type { AntryamiPort, AntryamiScene } from "./port";
-import { env } from "@/lib/env";
+import { env, providers } from "@/lib/env";
 
 function snapRoot() {
   return path.resolve(process.cwd(), "data/snapshots/antryami");
@@ -77,6 +77,6 @@ function normalizeTitle(t: Title): Title {
 }
 
 export function getAntryami(): AntryamiPort {
-  if (env.SNAPSHOT_MODE || !env.ANTRYAMI_BASE_URL) return new SnapshotAntryami();
+  if (!providers.antryami) return new SnapshotAntryami();
   return new LiveAntryami(env.ANTRYAMI_BASE_URL, env.ANTRYAMI_API_KEY);
 }

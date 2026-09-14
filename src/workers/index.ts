@@ -1,6 +1,6 @@
 import { Queue, Worker, type Job } from "bullmq";
 import { getRedis } from "@/lib/redis";
-import { env } from "@/lib/env";
+import { env, providers } from "@/lib/env";
 import { runPipeline } from "@/services/pipeline";
 import { cleanPartials } from "@/services/composer";
 import { storage } from "@/providers/storage";
@@ -48,7 +48,10 @@ export function startWorkers() {
 
 export async function runCanary() {
   const vertex = getVertex();
-  for (const purpose of MODEL_PURPOSES) {
+  const purposes = providers.vertex
+    ? (["judge"] as const)
+    : MODEL_PURPOSES;
+  for (const purpose of purposes) {
     const model = getModel(purpose);
     try {
       await vertex.canary(model.id);
@@ -58,12 +61,17 @@ export async function runCanary() {
           provider: `vertex.${purpose}`,
           model: model.id,
           lastOkAt: new Date(),
-          lastError: null,
+          lastError: providers.vertex ? null : "snapshot-mode",
           updatedAt: new Date(),
         })
         .onConflictDoUpdate({
           target: providerCanary.provider,
-          set: { lastOkAt: new Date(), lastError: null, model: model.id, updatedAt: new Date() },
+          set: {
+            lastOkAt: new Date(),
+            lastError: providers.vertex ? null : "snapshot-mode",
+            model: model.id,
+            updatedAt: new Date(),
+          },
         });
     } catch (e) {
       await db
@@ -81,21 +89,26 @@ export async function runCanary() {
         });
     }
   }
-  for (const p of ["elevenlabs", "antryami", "clickhouse"] as const) {
+  const extras: Array<{ name: string; live: boolean }> = [
+    { name: "elevenlabs", live: providers.elevenlabs },
+    { name: "antryami", live: providers.antryami },
+    { name: "clickhouse", live: providers.clickhouse },
+  ];
+  for (const p of extras) {
     await db
       .insert(providerCanary)
       .values({
-        provider: p,
+        provider: p.name,
         model: null,
-        lastOkAt: env.SNAPSHOT_MODE ? new Date() : new Date(),
-        lastError: env.SNAPSHOT_MODE ? "snapshot-mode" : null,
+        lastOkAt: new Date(),
+        lastError: p.live ? null : "snapshot-mode",
         updatedAt: new Date(),
       })
       .onConflictDoUpdate({
         target: providerCanary.provider,
         set: {
           lastOkAt: new Date(),
-          lastError: env.SNAPSHOT_MODE ? "snapshot-mode" : null,
+          lastError: p.live ? null : "snapshot-mode",
           updatedAt: new Date(),
         },
       });

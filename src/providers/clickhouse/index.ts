@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ClickHousePort, PerformanceRow, SceneRow } from "./port";
-import { env } from "@/lib/env";
+import { env, providers } from "@/lib/env";
 
 function snap(file: string) {
   return path.resolve(process.cwd(), "data/snapshots/clickhouse", file);
@@ -23,7 +23,10 @@ export class SnapshotClickHouse implements ClickHousePort {
 }
 
 export class LiveClickHouse implements ClickHousePort {
-  constructor(private readonly url: string, private readonly auth: { user: string; password: string }) {}
+  constructor(
+    private readonly url: string,
+    private readonly auth: { user: string; password: string; database: string },
+  ) {}
 
   private async query<T>(sql: string, params: Record<string, string>): Promise<T[]> {
     let body = sql;
@@ -31,16 +34,18 @@ export class LiveClickHouse implements ClickHousePort {
       if (!/^[a-zA-Z0-9_]+$/.test(k)) throw new Error("bad param name");
       body = body.replaceAll(`{${k}:String}`, `'${v.replaceAll("'", "''")}'`);
     }
-    const res = await fetch(this.url, {
+    const endpoint = new URL(this.url);
+    if (this.auth.database) endpoint.searchParams.set("database", this.auth.database);
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: {
         "content-type": "text/plain",
         authorization:
           "Basic " + Buffer.from(`${this.auth.user}:${this.auth.password}`).toString("base64"),
       },
-      body: `${body} FORMAT JSON`,
+      body: `${body}\nFORMAT JSON`,
     });
-    if (!res.ok) throw new Error(`clickhouse ${res.status}`);
+    if (!res.ok) throw new Error(`clickhouse ${res.status}: ${(await res.text()).slice(0, 240)}`);
     const json = (await res.json()) as { data: T[] };
     return json.data;
   }
@@ -63,9 +68,27 @@ export class LiveClickHouse implements ClickHousePort {
 }
 
 export function getClickHouse(): ClickHousePort {
-  if (env.SNAPSHOT_MODE || !env.CLICKHOUSE_URL) return new SnapshotClickHouse();
-  return new LiveClickHouse(env.CLICKHOUSE_URL, {
+  if (!providers.clickhouse) return new SnapshotClickHouse();
+  const live = new LiveClickHouse(env.CLICKHOUSE_URL, {
     user: env.CLICKHOUSE_USER,
     password: env.CLICKHOUSE_PASSWORD,
+    database: env.CLICKHOUSE_DB,
   });
+  const snap = new SnapshotClickHouse();
+  return {
+    async scenesForTitle(titleId: string) {
+      try {
+        return await live.scenesForTitle(titleId);
+      } catch {
+        return snap.scenesForTitle(titleId);
+      }
+    },
+    async promoPerformance() {
+      try {
+        return await live.promoPerformance();
+      } catch {
+        return snap.promoPerformance();
+      }
+    },
+  };
 }

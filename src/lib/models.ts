@@ -1,5 +1,6 @@
 import { z } from "zod";
 import models from "@/config/models.json";
+import { env } from "@/lib/env";
 
 export const ModelConfig = z.object({
   id: z.string(),
@@ -21,7 +22,14 @@ export function getModel(
     | "presenter_still"
     | "presenter_video",
 ): ModelConfig {
-  return ModelConfig.parse(models[purpose]);
+  const base = ModelConfig.parse(models[purpose]);
+  if ((purpose === "planning" || purpose === "scripting" || purpose === "angle") && env.VERTEX_PLAN_MODEL) {
+    return { ...base, id: env.VERTEX_PLAN_MODEL };
+  }
+  if ((purpose === "judge" || purpose === "asr" || purpose === "evidence_vision") && env.VERTEX_JUDGE_MODEL) {
+    return { ...base, id: env.VERTEX_JUDGE_MODEL };
+  }
+  return base;
 }
 
 export const MODEL_PURPOSES = [

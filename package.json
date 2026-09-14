@@ -16,13 +16,15 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "assets": "tsx scripts/generate-assets.ts",
-    "e2e:sc": "tsx scripts/e2e-sc.ts",
+    "env:check": "tsx scripts/check-env.ts",
+    "env:materialize": "node scripts/materialize-env.mjs",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "bullmq": "^5.21.2",
     "drizzle-orm": "^0.36.4",
+    "google-auth-library": "^11.0.2",
     "ioredis": "^5.4.2",
     "next": "14.2.15",
     "postgres": "^3.4.5",

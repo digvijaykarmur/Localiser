@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { ModelContractFailure } from "@/domain/errors";
-import { env } from "@/lib/env";
+import { env, providers } from "@/lib/env";
 import { id } from "@/lib/hash";
 import { db } from "@/db/client";
 import { modelCalls } from "@/db/schema";
@@ -106,9 +106,7 @@ async function vertexPredict(args: {
   temperature: number;
   seed?: number;
 }): Promise<{ text: string; tokens_in: number; tokens_out: number }> {
-  const url =
-    `https://${env.VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/${env.VERTEX_PROJECT}` +
-    `/locations/${env.VERTEX_LOCATION}/publishers/google/models/${args.model}:generateContent`;
+  const url = vertexGenerateUrl(args.model);
   const token = await getAccessToken();
   const res = await fetch(url, {
     method: "POST",
@@ -145,9 +143,22 @@ async function vertexPredict(args: {
 
 async function getAccessToken(): Promise<string> {
   if (process.env.VERTEX_ACCESS_TOKEN) return process.env.VERTEX_ACCESS_TOKEN;
-  const r = spawnSync("gcloud", ["auth", "print-access-token"], { encoding: "utf8" });
-  if (r.status !== 0) throw new Error("gcloud auth print-access-token failed");
-  return r.stdout.trim();
+  const { GoogleAuth } = await import("google-auth-library");
+  const auth = new GoogleAuth({
+    keyFile: env.GOOGLE_APPLICATION_CREDENTIALS || undefined,
+    scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+  });
+  const client = await auth.getClient();
+  const token = await client.getAccessToken();
+  if (!token.token) throw new Error("vertex access token empty");
+  return token.token;
+}
+
+function vertexGenerateUrl(model: string): string {
+  const loc = env.VERTEX_LOCATION || "global";
+  const host =
+    loc === "global" ? "https://aiplatform.googleapis.com" : `https://${loc}-aiplatform.googleapis.com`;
+  return `${host}/v1/projects/${env.VERTEX_PROJECT}/locations/${loc}/publishers/google/models/${model}:generateContent`;
 }
 
 export class LiveVertex implements VertexPort {
@@ -287,6 +298,6 @@ function estimateCost(tokensIn: number, tokensOut: number): number {
 }
 
 export function getVertex(): VertexPort {
-  if (env.SNAPSHOT_MODE || !env.VERTEX_PROJECT) return new SnapshotVertex();
+  if (!providers.vertex) return new SnapshotVertex();
   return new LiveVertex();
 }

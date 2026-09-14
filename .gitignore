@@ -10,4 +10,5 @@ data/media/**
 *.log
 tsconfig.tsbuildinfo
 .DS_Store
-coverage
+secrets/**
+!secrets/README.md

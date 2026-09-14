@@ -1,5 +1,5 @@
 import type { ElevenLabsPort } from "./port";
-import { env } from "@/lib/env";
+import { env, providers } from "@/lib/env";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -107,6 +107,20 @@ export class LiveElevenLabs implements ElevenLabsPort {
 }
 
 export function getElevenLabs(): ElevenLabsPort {
-  if (env.SNAPSHOT_MODE || !env.ELEVENLABS_API_KEY) return new SnapshotElevenLabs();
+  if (!providers.elevenlabs) return new SnapshotElevenLabs();
   return new LiveElevenLabs(env.ELEVENLABS_API_KEY);
+}
+
+function isPlaceholderVoice(voiceId: string): boolean {
+  return !voiceId || /_voice_stage_|placeholder/i.test(voiceId);
+}
+
+export function resolveElevenLabsVoiceId(packVoiceId: string): string {
+  if (env.ELEVENLABS_VOICE_ID) return env.ELEVENLABS_VOICE_ID;
+  if (!isPlaceholderVoice(packVoiceId)) return packVoiceId;
+  return packVoiceId;
+}
+
+export function resolveElevenLabsModel(packModel: string): string {
+  return env.ELEVENLABS_MODEL || packModel;
 }

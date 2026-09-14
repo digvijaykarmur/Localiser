@@ -15,7 +15,7 @@ import {
 } from "@/domain";
 import { getDialectPack, getFormat } from "@/lib/registry";
 import { storage } from "@/providers/storage";
-import { getElevenLabs } from "@/providers/elevenlabs";
+import { getElevenLabs, resolveElevenLabsModel, resolveElevenLabsVoiceId } from "@/providers/elevenlabs";
 import { getVertex } from "@/providers/vertex";
 import { costMeter } from "@/services/cost/meter";
 import { runFfmpeg } from "@/lib/ffmpeg";
@@ -314,8 +314,8 @@ export async function assembleRatio(args: {
     await costMeter.precheck(recipe.id, "elevenlabs.tts", recipe.cost_envelope_inr);
     await getElevenLabs().tts({
       text: voTexts,
-      voiceId: pack.voice.voice_id,
-      model: pack.voice.model,
+      voiceId: resolveElevenLabsVoiceId(pack.voice.voice_id),
+      model: resolveElevenLabsModel(pack.voice.model),
       settings: pack.voice.settings,
       outPath: storage.abs(voKey),
     });
