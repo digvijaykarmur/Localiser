@@ -29,7 +29,7 @@ export class LiveClickHouse implements ClickHousePort {
   ) {}
 
   private async query<T>(sql: string, params: Record<string, string>): Promise<T[]> {
-    let body = sql;
+    let body = sql.replace(/;\s*$/, "").trimEnd();
     for (const [k, v] of Object.entries(params)) {
       if (!/^[a-zA-Z0-9_]+$/.test(k)) throw new Error("bad param name");
       body = body.replaceAll(`{${k}:String}`, `'${v.replaceAll("'", "''")}'`);
