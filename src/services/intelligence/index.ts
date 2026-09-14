@@ -17,8 +17,9 @@ import { runFfmpeg } from "@/lib/ffmpeg";
 import { nowIso } from "@/lib/hash";
 import { costMeter } from "@/services/cost/meter";
 import { env, providers } from "@/lib/env";
-import { intelligenceFromLive } from "@/services/intelligence/live";
+import { intelligenceFromLive, fitEvidenceToMedia } from "@/services/intelligence/live";
 import { ensureSourceMedia } from "@/services/media/source";
+import { runFfprobeJson } from "@/lib/ffmpeg";
 
 export async function ingestTitle(titleId: string): Promise<Title> {
   const antryami = getAntryami();
@@ -167,6 +168,20 @@ export async function buildIntelligence(titleId: string): Promise<TitleIntellige
   }
 
   const sourcePath = path.resolve(process.cwd(), "data/media", `${titleId}.mp4`);
+  if (fs.existsSync(sourcePath)) {
+    try {
+      const probe = await runFfprobeJson(sourcePath);
+      const mediaMs = Math.round(Number(probe.format?.duration ?? 0) * 1000);
+      if (mediaMs >= 2000) {
+        intel = TitleIntelligence.parse({
+          ...intel,
+          evidence: fitEvidenceToMedia(intel.evidence, mediaMs),
+        });
+      }
+    } catch {
+      /* keep episode-absolute times if probe fails */
+    }
+  }
   const sceneRows = await db.select().from(scenes).where(eq(scenes.titleId, titleId));
   if (fs.existsSync(sourcePath)) {
     for (const s of sceneRows.slice(0, 6)) {

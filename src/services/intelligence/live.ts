@@ -146,3 +146,19 @@ export function intelligenceFromLive(args: {
     built_at: nowIso(),
   });
 }
+
+/** When CMS video is 403 we only have a ~90s local stand-in. Planner SC window is 5–25s. */
+export function fitEvidenceToMedia(evidence: EvidenceUnit[], mediaMs: number): EvidenceUnit[] {
+  if (!evidence.length || mediaMs < 2000) return evidence;
+  const maxEnd = Math.max(...evidence.map((e) => e.end_ms));
+  if (maxEnd <= mediaMs) return evidence;
+  const lo = Math.min(5000, Math.max(0, Math.floor(mediaMs * 0.08)));
+  const hi = Math.max(lo + 4000, Math.min(25000, mediaMs - 400));
+  const span = Math.max(1000, hi - lo);
+  const n = evidence.length;
+  return evidence.map((e, i) => {
+    const dur = Math.min(Math.max(e.end_ms - e.start_ms, 800), 2500, span);
+    const start = n === 1 ? lo : lo + Math.floor((i * (span - dur)) / Math.max(1, n - 1));
+    return applyCroppable({ ...e, start_ms: start, end_ms: start + dur });
+  });
+}
