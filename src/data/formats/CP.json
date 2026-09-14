@@ -1,0 +1,14 @@
+{
+  "code": "CP",
+  "name": "Caption Promo",
+  "beats": { "min": 5, "max": 8 },
+  "uses": { "vo": true, "music": true, "presenter": false, "source_audio": "ducked" },
+  "caption_mode": "authored_cards",
+  "cta": "locked_card_last_5s",
+  "cost_envelope_inr": 55,
+  "ratio_policy": {
+    "16:9": ["NATIVE", "STATIC_CROP"],
+    "1:1": ["TRACKED_CROP", "CAPTION_DOMINANT", "KENBURNS_STILL"],
+    "9:16": ["CAPTION_DOMINANT", "STACKED", "KENBURNS_STILL", "TRACKED_CROP"]
+  }
+}

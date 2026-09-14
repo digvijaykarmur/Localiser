@@ -1,0 +1,14 @@
+{
+  "code": "SC",
+  "name": "Single Clip",
+  "beats": { "min": 1, "max": 1 },
+  "uses": { "vo": false, "music": "optional", "presenter": false, "source_audio": true },
+  "caption_mode": "burned_asr",
+  "cta": "locked_card_last_4s",
+  "cost_envelope_inr": 12,
+  "ratio_policy": {
+    "16:9": ["NATIVE"],
+    "1:1": ["TRACKED_CROP", "STATIC_CROP", "CAPTION_DOMINANT"],
+    "9:16": ["TRACKED_CROP", "CAPTION_DOMINANT", "STACKED"]
+  }
+}

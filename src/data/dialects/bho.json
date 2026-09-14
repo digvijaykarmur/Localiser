@@ -1,0 +1,34 @@
+{
+  "code": "bho",
+  "name": "Bhojpuri",
+  "script": "devanagari",
+  "channel_id": "stage_bhojpuri",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "bho_voice_stage_01",
+    "model": "eleven_v3",
+    "language_code": "hi",
+    "settings": { "stability": 0.45, "similarity_boost": 0.8, "style": 0.4, "speed": 1.08 }
+  },
+  "rhythm": {
+    "words_per_second": 2.5,
+    "sentence_max_words": 9,
+    "caption_max_words": 6,
+    "beat_min_ms": 1500,
+    "beat_max_ms": 4000,
+    "hook_max_ms": 3000
+  },
+  "lexicon": { "replace": {}, "prefer": [], "avoid": [] },
+  "taboo": { "words": [], "themes": [] },
+  "cta_templates": {
+    "default": "अब देखीं — {title}, खाली STAGE पर"
+  },
+  "typography": {
+    "caption_font": "NotoSansDevanagari-Bold",
+    "caption_size_916": 88,
+    "caption_size_11": 64,
+    "caption_size_169": 56,
+    "line_height": 1.28
+  },
+  "register": "thin pack — voice and rhythm only"
+}

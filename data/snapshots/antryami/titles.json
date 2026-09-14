@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ttl_hry_01",
+    "name": "Khet Ke Log",
+    "name_native": "खेत के लोग",
+    "dialect": "hry",
+    "synopsis": "A Haryanvi family holds a farm together when a land deal turns sour.",
+    "runtime_ms": 2400000,
+    "spoiler_boundary_ms": 1440000,
+    "genre": [
+      "drama",
+      "family"
+    ],
+    "artwork_url": null,
+    "deep_link": "stage://title/ttl_hry_01"
+  },
+  {
+    "id": "ttl_raj_01",
+    "name": "Thar Ki Dhun",
+    "name_native": "थार की धुन",
+    "dialect": "raj",
+    "synopsis": "Two musicians cross the desert with a secret song.",
+    "runtime_ms": 2100000,
+    "spoiler_boundary_ms": 1260000,
+    "genre": [
+      "drama",
+      "music"
+    ],
+    "artwork_url": null,
+    "deep_link": "stage://title/ttl_raj_01"
+  }
+]

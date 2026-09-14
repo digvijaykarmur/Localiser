@@ -1,0 +1,43 @@
+{
+  "code": "raj",
+  "name": "Rajasthani",
+  "script": "devanagari",
+  "channel_id": "stage_rajasthani",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "raj_voice_stage_01",
+    "model": "eleven_v3",
+    "language_code": "hi",
+    "settings": { "stability": 0.5, "similarity_boost": 0.78, "style": 0.3, "speed": 1.0 }
+  },
+  "rhythm": {
+    "words_per_second": 2.2,
+    "sentence_max_words": 10,
+    "caption_max_words": 6,
+    "beat_min_ms": 1700,
+    "beat_max_ms": 4400,
+    "hook_max_ms": 3000
+  },
+  "lexicon": {
+    "replace": { "बहुत": "घणो", "क्या": "काई", "तुम": "थे", "हमारा": "म्हारो" },
+    "prefer": ["सा", "बाता", "म्हारो", "थारी"],
+    "avoid": ["अत्यंत", "परंतु", "किंतु", "तथा"]
+  },
+  "taboo": {
+    "words": [],
+    "themes": ["caste references", "explicit religious comparison"]
+  },
+  "cta_templates": {
+    "default": "अब देखो — {title}, सिरफ STAGE पे",
+    "urgent": "{title} — नयो एपिसोड STAGE पे",
+    "curious": "आगे काई होसी? देखो STAGE पे — {title}"
+  },
+  "typography": {
+    "caption_font": "NotoSansDevanagari-Bold",
+    "caption_size_916": 88,
+    "caption_size_11": 64,
+    "caption_size_169": 56,
+    "line_height": 1.28
+  },
+  "register": "warm rural Rajasthani, direct, familial, no courtly distance"
+}
