@@ -39,6 +39,23 @@ export default function LibraryPage() {
         </div>
       </div>
       {err && <div className="muted">{err}</div>}
+      <div className="panel">
+        <div className="muted">Make a promo</div>
+        <ol style={{ margin: "8px 0 0", paddingLeft: 18, lineHeight: 1.6 }}>
+          <li>Open a title (start with <strong>Khet Ke Log</strong> / hry).</li>
+          <li>
+            Click <strong>Build intelligence</strong> if evidence is empty.
+          </li>
+          <li>
+            Open the <strong>compose</strong> tab, pick format (SC is fastest), duration, then{" "}
+            <strong>Lock recipe and run</strong>.
+          </li>
+          <li>Wait on the job page. Preview 16:9 / 9:16 / 1:1, download, then review.</li>
+        </ol>
+        <div className="muted" style={{ marginTop: 8 }}>
+          CLI: <span className="tabular">pnpm promo -- --title ttl_hry_01 --format SC</span>
+        </div>
+      </div>
       <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
         {titles.map((t) => (
           <Link key={t.id} href={`/t/${t.id}`} className="panel">

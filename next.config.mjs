@@ -7,6 +7,7 @@ const nextConfig = {
       "postgres",
       "bullmq",
       "ioredis",
+      "google-auth-library",
     ],
   },
 };

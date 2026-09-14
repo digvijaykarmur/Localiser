@@ -75,24 +75,29 @@ export class LiveElevenLabs implements ElevenLabsPort {
     settings: Record<string, number>;
     outPath: string;
   }): Promise<{ path: string; cost_inr: number }> {
-    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${args.voiceId}`, {
-      method: "POST",
-      headers: {
-        "xi-api-key": this.apiKey,
-        "content-type": "application/json",
-        accept: "audio/mpeg",
-      },
-      body: JSON.stringify({
-        text: args.text,
-        model_id: args.model,
-        voice_settings: args.settings,
-      }),
-    });
-    if (!res.ok) throw new Error(`elevenlabs tts ${res.status}`);
-    const buf = Buffer.from(await res.arrayBuffer());
-    fs.mkdirSync(path.dirname(args.outPath), { recursive: true });
-    fs.writeFileSync(args.outPath, buf);
-    return { path: args.outPath, cost_inr: 6 };
+    try {
+      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${args.voiceId}`, {
+        method: "POST",
+        headers: {
+          "xi-api-key": this.apiKey,
+          "content-type": "application/json",
+          accept: "audio/mpeg",
+        },
+        body: JSON.stringify({
+          text: args.text,
+          model_id: args.model,
+          voice_settings: args.settings,
+        }),
+      });
+      if (!res.ok) throw new Error(`elevenlabs tts ${res.status}`);
+      const buf = Buffer.from(await res.arrayBuffer());
+      fs.mkdirSync(path.dirname(args.outPath), { recursive: true });
+      fs.writeFileSync(args.outPath, buf);
+      return { path: args.outPath, cost_inr: 6 };
+    } catch (e) {
+      console.error("elevenlabs tts live failed, snapshot fallback", (e as Error).message);
+      return new SnapshotElevenLabs().tts(args);
+    }
   }
 
   async music(args: { brief: string; durationS: number; outPath: string }): Promise<{
