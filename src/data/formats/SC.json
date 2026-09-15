@@ -1,0 +1,18 @@
+{
+  "code": "SC",
+  "name": "Single Clip",
+  "description": "One continuous source moment, the title's own audio, one caption line, a CTA card. No VO. The format that proves the thesis.",
+  "cta_duration_s": 4,
+  "default_envelope_inr": 12,
+  "spine": "light",
+  "min_usable_evidence": 2,
+  "has_vo": false,
+  "has_music": false,
+  "has_presenter": false,
+  "has_captions": true,
+  "keep_source_audio": true,
+  "allowed_treatments": ["NATIVE", "TRACKED_CROP", "STATIC_CROP", "SPEAKER_CUT", "CAPTION_DOMINANT", "KENBURNS_STILL"],
+  "composition_default": "CAPTION_DOMINANT",
+  "ai_generated_assets": false,
+  "prompt_versions": { "plan": "plan.v3" }
+}

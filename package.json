@@ -1,0 +1,62 @@
+{
+  "name": "stage-promo-engine",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Source-grounded promo production engine + campaign tracker for STAGE.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["sharp", "esbuild", "msgpackr-extract", "protobufjs", "unrs-resolver", "@google/genai"]
+  },
+  "scripts": {
+    "dev": "node scripts/preflight.mjs && concurrently -k -n web,workers -c blue,magenta \"next dev -p 3000\" \"pnpm workers\"",
+    "workers": "tsx watch src/workers/index.ts",
+    "workers:once": "tsx src/workers/index.ts",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests --ext .ts,.tsx",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    "snapshot:build": "tsx scripts/build-snapshot.ts",
+    "canary": "tsx scripts/provider-canary.ts",
+    "pipeline:run": "tsx scripts/run-pipeline.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^1.20.0",
+    "@tanstack/react-query": "^5.59.0",
+    "bullmq": "^5.30.0",
+    "drizzle-orm": "^0.36.4",
+    "ioredis": "^5.4.1",
+    "nanoid": "^5.0.9",
+    "next": "14.2.18",
+    "postgres": "^3.4.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "sharp": "^0.33.5",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "drizzle-kit": "^0.28.1",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.18",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.5"
+  }
+}

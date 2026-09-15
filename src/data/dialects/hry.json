@@ -1,0 +1,87 @@
+{
+  "code": "hry",
+  "name": "Haryanvi",
+  "version": "hry.v4",
+  "script": "devanagari",
+  "channel_id": "stage_haryanvi",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "",
+    "model": "eleven_v3",
+    "language_code": "hi",
+    "settings": {
+      "stability": 0.45,
+      "similarity_boost": 0.8,
+      "style": 0.35,
+      "speed": 1.05
+    }
+  },
+  "rhythm": {
+    "words_per_second": 2.5,
+    "sentence_max_words": 9,
+    "caption_max_words": 6,
+    "beat_min_ms": 1600,
+    "beat_max_ms": 4200,
+    "hook_max_ms": 3000
+  },
+  "lexicon": {
+    "replace": {
+      "बहुत": "घणा",
+      "क्या": "के",
+      "तुम": "थम",
+      "हमारा": "म्हारा",
+      "तुम्हारा": "थारा",
+      "नहीं": "कोन्या",
+      "कब": "जिब",
+      "पता": "बेरा",
+      "है": "सै",
+      "हैं": "सैं",
+      "लड़का": "छोरा",
+      "लड़की": "छोरी",
+      "देखो": "देख ल्यो"
+    },
+    "prefer": [
+      "सै",
+      "बेरा",
+      "जिब",
+      "कोन्या",
+      "घणा",
+      "म्हारा",
+      "छोरा",
+      "छोरी",
+      "ताऊ",
+      "इब"
+    ],
+    "avoid": [
+      "अत्यंत",
+      "परंतु",
+      "किंतु",
+      "तथा",
+      "अवश्य",
+      "कृपया",
+      "प्रस्तुत",
+      "अद्वितीय"
+    ]
+  },
+  "taboo": {
+    "words": [],
+    "themes": [
+      "caste references",
+      "explicit religious comparison",
+      "mockery of rural accent"
+    ]
+  },
+  "cta_templates": {
+    "default": "अब देख ल्यो — {title}, सिर्फ STAGE पै",
+    "urgent": "{title} — नया एपिसोड STAGE पै",
+    "binge": "{title} के सारे एपिसोड, इब STAGE पै"
+  },
+  "typography": {
+    "caption_font": "NotoSansDevanagari-Bold",
+    "caption_size_916": 88,
+    "caption_size_11": 64,
+    "caption_size_169": 56,
+    "line_height": 1.28
+  },
+  "register": "informal, masculine-leaning rural, direct address, no honorific distance"
+}

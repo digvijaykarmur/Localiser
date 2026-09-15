@@ -1,0 +1,33 @@
+{
+  "code": "mar",
+  "name": "Marathi",
+  "version": "mar.v1",
+  "script": "devanagari",
+  "channel_id": "stage_marathi",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "",
+    "model": "eleven_v3",
+    "language_code": "mr",
+    "settings": { "stability": 0.5, "similarity_boost": 0.8, "style": 0.3, "speed": 1.0 }
+  },
+  "rhythm": {
+    "words_per_second": 2.3,
+    "sentence_max_words": 9,
+    "caption_max_words": 6,
+    "beat_min_ms": 1600,
+    "beat_max_ms": 4200,
+    "hook_max_ms": 3000
+  },
+  "lexicon": { "replace": {}, "prefer": [], "avoid": [] },
+  "taboo": { "words": [], "themes": ["caste references", "explicit religious comparison"] },
+  "cta_templates": { "default": "आता बघा — {title}, फक्त STAGE वर" },
+  "typography": {
+    "caption_font": "NotoSansDevanagari-Bold",
+    "caption_size_916": 88,
+    "caption_size_11": 64,
+    "caption_size_169": 56,
+    "line_height": 1.28
+  },
+  "register": "informal, direct address"
+}

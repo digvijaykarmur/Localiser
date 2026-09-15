@@ -1,0 +1,48 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": { "project": false, "ecmaVersion": 2022, "sourceType": "module" },
+  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "next/core-web-vitals"],
+  "ignorePatterns": ["node_modules", ".next", ".data", "src/db/migrations"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/consistent-type-imports": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["src/domain/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "group": ["**/providers/**", "**/services/**", "**/db/**", "**/workers/**", "**/app/**", "@/providers/*", "@/services/*", "@/db/*"],
+            "message": "domain is pure: it imports nothing from providers, services, db, workers or app"
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/providers/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "group": ["**/services/**", "**/workers/**", "**/app/**", "@/services/*", "@/workers/*"],
+            "message": "providers import domain (and db for logging) only"
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/services/composer/**/*.ts", "src/services/qc/deterministic/**/*.ts", "src/services/qc/deterministic.ts"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "group": ["**/providers/vertex/**", "**/providers/elevenlabs/**", "@/providers/vertex/*", "@/providers/elevenlabs/*", "@/providers/vertex", "@/providers/elevenlabs", "**/prompts/**", "@/prompts/*"],
+            "message": "DTE: composer and qc-deterministic must not reach a model provider"
+          }]
+        }]
+      }
+    }
+  ]
+}

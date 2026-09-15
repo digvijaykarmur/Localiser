@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Noto Sans Devanagari";
+  src: url("/fonts/NotoSansDevanagari-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans Devanagari";
+  src: url("/fonts/NotoSansDevanagari-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans Bengali";
+  src: url("/fonts/NotoSansBengali-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans Bengali";
+  src: url("/fonts/NotoSansBengali-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  @apply bg-surface text-ink font-ui text-ui antialiased;
+}
+
+/* Content text is set large: the editor is judging whether a matra is legible (§28.2). */
+.native {
+  font-family: "Noto Sans Devanagari", "Noto Sans Bengali", sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.native-lg {
+  font-family: "Noto Sans Devanagari", "Noto Sans Bengali", sans-serif;
+  font-size: 22px;
+  line-height: 1.45;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.panel {
+  @apply bg-panel border border-hairline rounded-md;
+}
+
+.btn {
+  @apply inline-flex items-center gap-2 h-8 px-3 rounded border border-hairline bg-panel2 text-ink hover:border-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors;
+}
+.btn-primary {
+  @apply bg-accent border-accent text-white hover:bg-[#2F6BE6] hover:border-[#2F6BE6];
+}
+.btn-sm {
+  @apply h-7 px-2 text-[13px];
+}
+
+.chip {
+  @apply inline-flex items-center gap-1.5 h-6 px-2 rounded-full border border-hairline text-[12px] text-muted;
+}
+
+.input {
+  @apply h-8 px-2 rounded border border-hairline bg-surface text-ink focus:outline-none focus:border-accent;
+}
+
+.tab {
+  @apply h-9 px-3 border-b-2 border-transparent text-muted hover:text-ink;
+}
+.tab-active {
+  @apply border-accent text-ink;
+}
+
+/* Diagonal hatch encodes croppable_916 === false (§28.2). */
+.hatch {
+  background-image: repeating-linear-gradient(135deg, rgba(194, 69, 63, 0.55) 0 6px, transparent 6px 14px);
+}
+
+.kbd {
+  @apply inline-flex items-center justify-center min-w-[20px] h-5 px-1 rounded border border-hairline bg-surface text-[11px] text-muted;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes pulse-stage {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.stage-running {
+  animation: pulse-stage 1.4s ease-in-out infinite;
+}
