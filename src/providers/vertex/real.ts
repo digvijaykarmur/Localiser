@@ -1,9 +1,9 @@
 import { GoogleGenAI, type Content as GContent, type Part } from "@google/genai";
 import { env } from "@/config/env";
 import { models, round2, tokenCostInr } from "@/config/models";
-import { ProviderUnavailable, type Ratio } from "@/domain";
+import { ProviderUnavailable } from "@/domain";
 import { safeJsonParse } from "@/lib/json";
-import type { Content, GenerateResult, ModelCallMeta, VertexPort } from "../ports";
+import type { Content, GenerateResult, VertexPort } from "../ports";
 
 /**
  * Real Gemini/Veo adapter over @google/genai. Uses Vertex AI when VERTEX_PROJECT is set

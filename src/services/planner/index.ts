@@ -1,6 +1,7 @@
 import { models } from "@/config/models";
+import type {
+  Beat} from "@/domain";
 import {
-  Beat,
   frameBudget,
   planTrackedCrop,
   PlanProposal,

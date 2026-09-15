@@ -13,7 +13,6 @@ import {
   STACKED,
   Timeline,
   type AudioTrack,
-  type Beat,
   type EvidenceUnit,
   type FormatPolicy,
   type Layer,

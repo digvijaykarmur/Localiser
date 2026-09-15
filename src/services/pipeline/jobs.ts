@@ -20,11 +20,16 @@ export async function getJobView(jobId: string) {
   for (const r of byKind("render")) if (r.ratio && r.storageKey) renders[r.ratio] = await st.url(r.storageKey);
 
   const stageIndex = PIPELINE_ORDER.indexOf(job.stage as JobStage);
+  type StageState = "queued" | "running" | "done" | "failed" | "waiting-provider";
   const stages = PIPELINE_ORDER.map((s, i) => ({
     stage: s,
-    state:
-      job.stage === "READY" ? "done" : job.stage === "FAILED" || job.stage === "CANCELLED" ? (i < stageIndex ? "done" : i === stageIndex ? "failed" : "queued") : job.stage === "WAITING_PROVIDER" ? (s === job.resumeStage ? "waiting-provider" : i < PIPELINE_ORDER.indexOf(job.resumeStage as JobStage) ? "done" : "queued") : i < stageIndex ? "done" : i === stageIndex ? "running" : "queued",
-    timing: job.stageTimings?.[s] ?? null,
+    state: (job.stage === "READY" ? "done" : job.stage === "FAILED" || job.stage === "CANCELLED" ? (i < stageIndex ? "done" : i === stageIndex ? "failed" : "queued") : job.stage === "WAITING_PROVIDER" ? (s === job.resumeStage ? "waiting-provider" : i < PIPELINE_ORDER.indexOf(job.resumeStage as JobStage) ? "done" : "queued") : i < stageIndex ? "done" : i === stageIndex ? "running" : "queued") as StageState,
+    timing: (() => {
+      const t = job.stageTimings?.[s];
+      if (!t) return null;
+      const ms = t.finished_at ? new Date(t.finished_at).getTime() - new Date(t.started_at).getTime() : undefined;
+      return { ...t, ms };
+    })(),
   }));
   if (job.stage === "FAILED" && (job.error as { code?: string } | null)?.code === "QC_GATE") stages[stages.length - 1]!.state = "failed";
 

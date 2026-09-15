@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { defaultSpoilerBoundaryMs, DialectCode, PromoError, RawScene, Title, type Page } from "@/domain";
+import type { DialectCode} from "@/domain";
+import { defaultSpoilerBoundaryMs, PromoError, RawScene, Title, type Page } from "@/domain";
 import type { AntryamiPort } from "../ports";
 
 /**
