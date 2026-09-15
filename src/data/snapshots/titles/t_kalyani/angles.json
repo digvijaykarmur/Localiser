@@ -1,0 +1,50 @@
+[
+  {
+    "kind": "conflict",
+    "claim": "A letter proves the land was never sold — and the man who profited is family.",
+    "evidence_ids": ["ev_t_kalyani_0001", "ev_t_kalyani_0002", "ev_t_kalyani_0003", "ev_t_kalyani_0006", "ev_t_kalyani_0008", "ev_t_kalyani_0009"],
+    "hook_candidate_ids": ["ev_t_kalyani_0001", "ev_t_kalyani_0008"],
+    "audience_note": "Land disputes are the most-shared story type on the Haryanvi channel.",
+    "spoiler_safe": true
+  },
+  {
+    "kind": "character",
+    "claim": "Kalyani stops being quiet: a schoolteacher takes on the panchayat alone.",
+    "evidence_ids": ["ev_t_kalyani_0001", "ev_t_kalyani_0008", "ev_t_kalyani_0007", "ev_t_kalyani_0005"],
+    "hook_candidate_ids": ["ev_t_kalyani_0008"],
+    "audience_note": "Female-led resolve arcs perform with 25–40 women.",
+    "spoiler_safe": true
+  },
+  {
+    "kind": "relationship",
+    "claim": "A husband must choose between his wife's truth and his brother's lie.",
+    "evidence_ids": ["ev_t_kalyani_0003", "ev_t_kalyani_0004", "ev_t_kalyani_0002", "ev_t_kalyani_0011"],
+    "hook_candidate_ids": ["ev_t_kalyani_0011", "ev_t_kalyani_0003"],
+    "audience_note": "Marital loyalty framing; strong on 1:1 feed placements.",
+    "spoiler_safe": true
+  },
+  {
+    "kind": "mystery",
+    "claim": "Who signed the registry — and why is the thumbprint not her father's?",
+    "evidence_ids": ["ev_t_kalyani_0006", "ev_t_kalyani_0001", "ev_t_kalyani_0002", "ev_t_kalyani_0009"],
+    "hook_candidate_ids": ["ev_t_kalyani_0006", "ev_t_kalyani_0001"],
+    "audience_note": "Question-led hook; works for Shorts where the first second must pose a puzzle.",
+    "spoiler_safe": true
+  },
+  {
+    "kind": "dialogue",
+    "claim": "\"इब मैं चुप कोन्या रहूँगी\" — the line the whole village hears.",
+    "evidence_ids": ["ev_t_kalyani_0008", "ev_t_kalyani_0003", "ev_t_kalyani_0005", "ev_t_kalyani_0011"],
+    "hook_candidate_ids": ["ev_t_kalyani_0008"],
+    "audience_note": "Dialogue-forward; composes well in caption-dominant vertical.",
+    "spoiler_safe": true
+  },
+  {
+    "kind": "world",
+    "claim": "The panchayat under the peepal decides everything — including who owns the ground it sits on.",
+    "evidence_ids": ["ev_t_kalyani_0005", "ev_t_kalyani_0000", "ev_t_kalyani_0010", "ev_t_kalyani_0006"],
+    "hook_candidate_ids": ["ev_t_kalyani_0005"],
+    "audience_note": "Setting-led; weaker hook, strong for 16:9 pre-roll.",
+    "spoiler_safe": true
+  }
+]

@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.data/
+.secrets/
+.env
+.env.local
+*.log
+*.partial
+.DS_Store
+tsconfig.tsbuildinfo
+src/data/snapshots/media/*.mp4

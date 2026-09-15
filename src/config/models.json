@@ -1,0 +1,23 @@
+{
+  "evidence_vision": { "model": "gemini-3.7-flash", "temperature": 0.1 },
+  "angles": { "model": "gemini-3.1-pro-preview", "temperature": 0.8 },
+  "plan": { "model": "gemini-3.1-pro-preview", "temperature": 0.7 },
+  "script": { "model": "gemini-3.1-pro-preview", "temperature": 0.9 },
+  "judge": { "model": "gemini-3.7-flash", "temperature": 0.0 },
+  "asr": { "model": "gemini-3.7-flash", "temperature": 0.0 },
+  "image": { "model": "gemini-3.1-flash-image" },
+  "video": { "model": "veo-3.1-fast", "fallback": "veo-3.1" },
+  "music": { "model": "music_v2_5" },
+  "pricing_usd_per_million_tokens": {
+    "gemini-3.7-flash": { "in": 0.3, "out": 2.5 },
+    "gemini-3.1-pro-preview": { "in": 2.0, "out": 12.0 },
+    "default": { "in": 1.0, "out": 5.0 }
+  },
+  "pricing_usd_flat": {
+    "image_per_call": 0.04,
+    "video_per_second": 0.15,
+    "elevenlabs_tts_per_1k_chars": 0.18,
+    "elevenlabs_music_per_call": 0.5,
+    "asr_per_minute": 0.02
+  }
+}

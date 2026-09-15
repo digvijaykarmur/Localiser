@@ -1,0 +1,18 @@
+{
+  "code": "SU",
+  "name": "Split UGC",
+  "description": "A generated presenter stacked over uncropped source footage, dialect VO, caption strip and CTA. Highest cost, highest risk.",
+  "cta_duration_s": 5,
+  "default_envelope_inr": 420,
+  "spine": "full",
+  "min_usable_evidence": 6,
+  "has_vo": true,
+  "has_music": true,
+  "has_presenter": true,
+  "has_captions": true,
+  "keep_source_audio": false,
+  "allowed_treatments": ["NATIVE", "STACKED", "GENERATED_NATIVE"],
+  "composition_default": "STACKED",
+  "ai_generated_assets": true,
+  "prompt_versions": { "plan": "plan.v3", "script": "script.v2" }
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "t_kalyani",
+    "name": "Kalyani ka Sach",
+    "name_native": "कल्याणी का सच",
+    "dialect": "hry",
+    "synopsis": "Kalyani, a schoolteacher in a Rohtak village, finds a letter that proves her late father's land was never sold. Her brother-in-law Randhir has built his standing on that sale. Her husband must choose between his wife and his family, and the panchayat is watching.",
+    "runtime_ms": 120000,
+    "spoiler_boundary_ms": 96000,
+    "genre": ["family drama", "thriller"],
+    "artwork_url": null,
+    "deep_link": "stage://title/kalyani-ka-sach",
+    "intelligence_built_at": null
+  },
+  {
+    "id": "t_dhola",
+    "name": "Dhola Maru Returns",
+    "name_native": "ढोला मारू रिटर्न्स",
+    "dialect": "raj",
+    "synopsis": "A modern retelling in Jaisalmer. Dhola, a folk singer, returns after eight years to find Maru engaged to a hotel owner. A wedding, a flooded stepwell, and a song that only two people know.",
+    "runtime_ms": 120000,
+    "spoiler_boundary_ms": 96000,
+    "genre": ["romance", "drama"],
+    "artwork_url": null,
+    "deep_link": "stage://title/dhola-maru-returns",
+    "intelligence_built_at": null
+  }
+]

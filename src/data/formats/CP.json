@@ -1,0 +1,18 @@
+{
+  "code": "CP",
+  "name": "Caption Promo",
+  "description": "Five-beat spine over source footage with dialect VO, caption cards, a music bed and a CTA card.",
+  "cta_duration_s": 5,
+  "default_envelope_inr": 55,
+  "spine": "full",
+  "min_usable_evidence": 6,
+  "has_vo": true,
+  "has_music": true,
+  "has_presenter": false,
+  "has_captions": true,
+  "keep_source_audio": true,
+  "allowed_treatments": ["NATIVE", "TRACKED_CROP", "STATIC_CROP", "SPEAKER_CUT", "CAPTION_DOMINANT", "KENBURNS_STILL"],
+  "composition_default": "CAPTION_DOMINANT",
+  "ai_generated_assets": false,
+  "prompt_versions": { "plan": "plan.v3", "script": "script.v2" }
+}
