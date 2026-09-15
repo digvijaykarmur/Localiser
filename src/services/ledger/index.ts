@@ -41,7 +41,8 @@ export async function recordVerdict(promoId: string, v: { verdict: Verdict; reas
 export async function recordOutcome(promoId: string, o: { published_at: Date | null; impressions: number; view_rate_3s: number; completion_rate: number; ctr_to_title: number }) {
   const r = await db
     .update(schema.ledger)
-    .set({ publishedAt: o.published_at, impressions: o.impressions, viewRate3s: o.view_rate_3s, completionRate: o.completion_rate, ctrToTitle: o.ctr_to_title })
+    // Analytics rows without a published_at must not erase the timestamp recorded at manual publish.
+    .set({ ...(o.published_at ? { publishedAt: o.published_at } : {}), impressions: o.impressions, viewRate3s: o.view_rate_3s, completionRate: o.completion_rate, ctrToTitle: o.ctr_to_title })
     .where(eq(schema.ledger.promoId, promoId))
     .returning({ promoId: schema.ledger.promoId });
   return r.length;

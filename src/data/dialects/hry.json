@@ -1,7 +1,7 @@
 {
   "code": "hry",
   "name": "Haryanvi",
-  "version": "hry.v3",
+  "version": "hry.v4",
   "script": "devanagari",
   "channel_id": "stage_haryanvi",
   "voice": {
@@ -9,10 +9,15 @@
     "voice_id": "",
     "model": "eleven_v3",
     "language_code": "hi",
-    "settings": { "stability": 0.45, "similarity_boost": 0.8, "style": 0.35, "speed": 1.05 }
+    "settings": {
+      "stability": 0.45,
+      "similarity_boost": 0.8,
+      "style": 0.35,
+      "speed": 1.05
+    }
   },
   "rhythm": {
-    "words_per_second": 2.4,
+    "words_per_second": 2.5,
     "sentence_max_words": 9,
     "caption_max_words": 6,
     "beat_min_ms": 1600,
@@ -35,12 +40,36 @@
       "लड़की": "छोरी",
       "देखो": "देख ल्यो"
     },
-    "prefer": ["सै", "बेरा", "जिब", "कोन्या", "घणा", "म्हारा", "छोरा", "छोरी", "ताऊ", "इब"],
-    "avoid": ["अत्यंत", "परंतु", "किंतु", "तथा", "अवश्य", "कृपया", "प्रस्तुत", "अद्वितीय"]
+    "prefer": [
+      "सै",
+      "बेरा",
+      "जिब",
+      "कोन्या",
+      "घणा",
+      "म्हारा",
+      "छोरा",
+      "छोरी",
+      "ताऊ",
+      "इब"
+    ],
+    "avoid": [
+      "अत्यंत",
+      "परंतु",
+      "किंतु",
+      "तथा",
+      "अवश्य",
+      "कृपया",
+      "प्रस्तुत",
+      "अद्वितीय"
+    ]
   },
   "taboo": {
     "words": [],
-    "themes": ["caste references", "explicit religious comparison", "mockery of rural accent"]
+    "themes": [
+      "caste references",
+      "explicit religious comparison",
+      "mockery of rural accent"
+    ]
   },
   "cta_templates": {
     "default": "अब देख ल्यो — {title}, सिर्फ STAGE पै",

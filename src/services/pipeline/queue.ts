@@ -58,11 +58,15 @@ export function setInlineMode(v: boolean): void {
   inline = v;
 }
 
-/** BullMQ job id is deterministic per (job, stage) so duplicate enqueues collapse. */
+/** BullMQ job id is deterministic per (job, stage) so duplicate enqueues collapse. BullMQ forbids ":" in custom ids. */
+export function stageJobId(jobId: string, stage: JobStage, nonce?: string): string {
+  return [jobId, stage, nonce].filter(Boolean).join("__");
+}
+
 export async function enqueueStage(jobId: string, stage: JobStage, opts: { delayMs?: number; nonce?: string } = {}): Promise<void> {
   if (inline) return;
   const q = queues()[laneFor(stage)];
-  await q.add(stage, { jobId, stage }, { jobId: `${jobId}:${stage}${opts.nonce ? ":" + opts.nonce : ""}`, delay: opts.delayMs });
+  await q.add(stage, { jobId, stage }, { jobId: stageJobId(jobId, stage, opts.nonce), delay: opts.delayMs });
 }
 
 export const MAINTENANCE_QUEUE = "maintenance";

@@ -10,8 +10,9 @@ import { TitleCard, type TitleListItem } from "./TitleCard";
 
 type JobRow = { id: string; stage: string; promo_id: string | null; cost_spent_inr: number; created_at: string; format: string | null; dialect: string | null; duration_s: number | null; title: { id: string; name: string } | null };
 type QueueRow = { promo_id: string; job_id: string; title: { id: string; name: string; name_native: string } | null; format: string | null; dialect: string | null; duration_s: number | null };
+type DeliveryRow = { promo_id: string; job_id: string; status: string; scheduled_at: string | null; delivered_at: string | null; format: string | null; title: { id: string; name: string } | null };
 
-export function Library({ titles, jobs, queue }: { titles: TitleListItem[]; jobs: JobRow[]; queue: QueueRow[] }) {
+export function Library({ titles, jobs, queue, delivery }: { titles: TitleListItem[]; jobs: JobRow[]; queue: QueueRow[]; delivery: DeliveryRow[] }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
@@ -90,6 +91,28 @@ export function Library({ titles, jobs, queue }: { titles: TitleListItem[]; jobs
                     <span className="truncate">{q.title?.name ?? q.promo_id}</span>
                     <span className="text-muted text-[12px] shrink-0">
                       {q.format} · {q.dialect} · {q.duration_s}s
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="panel p-3">
+          <div className="flex items-baseline justify-between mb-2">
+            <h2 className="font-medium">Delivery queue</h2>
+            <span className="text-muted num">{delivery.length}</span>
+          </div>
+          {delivery.length === 0 ? (
+            <div className="text-muted text-[13px]">Nothing approved and unpublished.</div>
+          ) : (
+            <ul className="space-y-1">
+              {delivery.slice(0, 8).map((d) => (
+                <li key={d.promo_id}>
+                  <Link href={`/j/${d.job_id}?tab=review`} className="flex items-center justify-between gap-2 rounded px-2 py-1 hover:bg-panel2">
+                    <span className="truncate">{d.title?.name ?? d.promo_id}</span>
+                    <span className={`text-[12px] shrink-0 ${d.status === "SCHEDULED" ? "text-approved" : "text-muted"}`}>
+                      {d.format} · {d.status === "SCHEDULED" && d.scheduled_at ? new Date(d.scheduled_at).toLocaleDateString() : d.delivered_at ? "exported" : "approved"}
                     </span>
                   </Link>
                 </li>

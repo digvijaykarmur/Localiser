@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { Campaign, SlotStatus } from "@/domain/campaign";
@@ -211,7 +212,15 @@ export function CampaignBoard({ campaigns, presets, titles, initialId }: { campa
                 <h2 className="font-medium">Batch fill</h2>
                 <span className="text-[12px] text-muted">Select slots above, pick a preset, pick a title per slot, confirm the combined cost.</span>
               </div>
-              {picked.length === 0 ? (
+              {presets.length === 0 ? (
+                <div className="text-[13px] text-muted">
+                  Batch fill needs a preset (format + dialect + duration + ratios + CTA + music brief). Open a title’s{" "}
+                  <Link className="text-accent" href={channelTitles[0] ? `/t/${channelTitles[0].id}?tab=compose` : "/"}>
+                    Compose tab
+                  </Link>{" "}
+                  and click “Save as preset”.
+                </div>
+              ) : picked.length === 0 ? (
                 <div className="text-faint text-[13px]">No slots selected.</div>
               ) : (
                 <>

@@ -159,6 +159,14 @@ export async function runStage(jobId: string, stage: JobStage): Promise<{ next: 
   const job = await db.query.jobs.findFirst({ where: eq(schema.jobs.id, jobId) });
   if (!job) throw new PromoError("NOT_FOUND", `Job ${jobId} not found`);
   if (job.stage === "CANCELLED") return { next: null };
+  // Stale deliveries (a BullMQ retry of an attempt that has since been superseded, or a duplicate
+  // enqueue) must not drag a job backwards. Only the stage the job is actually at may run.
+  const current = (job.stage === "QUEUED" ? "PLAN" : job.stage === "WAITING_PROVIDER" ? job.resumeStage : job.stage) as JobStage | null;
+  const accepted = current && PIPELINE_ORDER.includes(current) ? [current, nextStage(current)] : [];
+  if (!accepted.includes(stage)) {
+    logger.warn("stale stage delivery ignored", { jobId, stage, current: job.stage });
+    return { next: null };
+  }
   const ctx = await loadJobContext(jobId);
   await setStage(jobId, stage, { error: null });
   logger.info("stage start", { jobId, stage });
